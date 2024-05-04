@@ -10,17 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('fines', function (Blueprint $table) {
             $table->id();
-            $table->string('username')->unique();
-            $table->string('full_name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->tinyInteger('role');
-            $table->rememberToken();
+            $table->unsignedBigInteger('borrowing_id');
+            $table->decimal('fine_amount', 10, 2);
+            $table->text('reason');
             $table->timestamps();
             $table->softDeletes();
+
+            // Define foreign key constraints
+            $table->foreign('borrowing_id')->references('id')->on('borrowings')->onDelete('cascade');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('fines');
     }
 };
