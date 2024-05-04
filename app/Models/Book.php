@@ -18,4 +18,29 @@ class Book extends Model
         'total_rating',
         'total_readers',
     ];
+
+    public function authors()
+    {
+        return $this->belongsToMany(Author::class, 'book_authors');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'book_categories');
+    }
+
+    public function readers()
+    {
+        return $this->belongsToMany(User::class, 'user_readings');
+    }
+
+    public function borrowers()
+    {
+        return $this->belongsToMany(User::class, 'borrowings');
+    }
+
+    public function reviewers()
+    {
+        return $this->belongsToMany(User::class, 'reviews');
+    }
 }
