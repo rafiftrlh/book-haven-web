@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->string('cover');
             $table->string('language');
             $table->integer('stock');
-            $table->decimal('total_rating', 3, 2);
-            $table->integer('total_readers');
+            $table->decimal('total_rating', 3, 2)->nullable();
+            $table->integer('total_readers')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
