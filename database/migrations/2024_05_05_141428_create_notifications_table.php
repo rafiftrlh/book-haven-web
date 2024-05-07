@@ -10,17 +10,17 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('cover');
-            $table->string('title_book');
-            $table->text('synopsis');
-            $table->string('language', 5);
-            $table->integer('stock');
-            $table->decimal('total_rating', 3, 2)->nullable();
-            $table->integer('total_readers')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->text('message');
+            $table->enum('status', ['Read', 'Unread']);
+            $table->string('notification_type', 50);
             $table->timestamps();
             $table->softDeletes();
+
+            // Define foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('notifications');
     }
 };

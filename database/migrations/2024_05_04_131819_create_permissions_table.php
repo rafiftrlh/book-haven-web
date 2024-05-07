@@ -12,10 +12,10 @@ return new class extends Migration {
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('approved_by');
+            $table->unsignedBigInteger('approved_by')->nullable();
             $table->unsignedBigInteger('borrowing_id');
             $table->dateTime('permission_date')->nullable();
-            $table->string('status', 20);
+            $table->string('status', 20)->default('Menunggu Persetujuan');
             $table->timestamps();
             $table->softDeletes();
 
