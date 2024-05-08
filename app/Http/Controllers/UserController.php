@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+
+use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
@@ -30,7 +33,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $dataUser = $request->validate([
-            'username' => ['string', 'min:6', 'max:15', 'unique:users,username', 'required'],
+            'username' => ['string', 'min:6', 'max:25', 'alpha_num', 'unique:users,username', 'required'],
             'full_name' => ['string', 'required'],
             'email' => ['email', 'unique:users,email', 'required'],
             'password' => ['string', 'min:6', 'required'],
@@ -48,10 +51,12 @@ class UserController extends Controller
         try {
             User::create($dataUser);
 
-            return response()->json([
-                'message' => 'Berhasil Membuat Akun',
-                'data' => $dataUser
-            ], 202);
+            // return response()->json([
+            //     'message' => 'Berhasil Membuat Akun',
+            //     'data' => $dataUser
+            // ], 202);
+
+            return back();
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -107,7 +112,7 @@ class UserController extends Controller
     public function reset_pw(Request $request)
     {
         $dataUser = $request->validate([
-            'username' => ['string', 'min:6', 'max:15', 'required'],
+            'username' => ['string', 'min:6', 'max:25', 'alpha_num', 'unique:users,username', 'required'],
             'email' => ['email', 'required'],
             'old_password' => ['string', 'min:6', 'required'],
             'new_password' => ['string', 'min:6', 'required'],
@@ -156,10 +161,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $username)
+    public function destroy(string $id)
     {
         // Mencari pengguna berdasarkan username
-        $userCheck = User::where('username', $username)->first();
+        $userCheck = User::where('id', $id)->first();
 
         if (!$userCheck) {
             // Jika pengguna tidak ditemukan, kirim response 404 Not Found
@@ -172,10 +177,12 @@ class UserController extends Controller
             // Hapus pengguna
             $userCheck->delete();
 
-            return response()->json([
-                'message' => 'Berhasil Menghapus Akun !!',
-                'data' => $userCheck
-            ]);
+            return back();
+
+            // return response()->json([
+            //     'message' => 'Berhasil Menghapus Akun !!',
+            //     'data' => $userCheck
+            // ]);
         } catch (\Throwable $th) {
             throw $th;
         }
