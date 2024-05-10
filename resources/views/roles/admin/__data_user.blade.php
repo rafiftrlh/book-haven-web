@@ -51,7 +51,15 @@
                                                     <p class="text-xs text-secondary mb-0" px-3>{{ $user->email }}</p>
                                                 </td>
                                                 <td>
-                                                    <p class="text-xs text-secondary mb-0" px-3>{{ $user->role }}</p>
+                                                    <p class="text-xs text-secondary mb-0" px-3>
+                                                        @if ($user->role == 1)
+                                                            Admin
+                                                        @elseif ($user->role == 2)
+                                                            Officer
+                                                        @else
+                                                            Customer
+                                                        @endif
+                                                    </p>
                                                 </td>
                                                 <td class="d-flex gap-3 px-3">
                                                     <button type="button" class="btn bg-gradient-info"

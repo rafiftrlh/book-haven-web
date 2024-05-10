@@ -21,25 +21,27 @@
                     <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
                         <div class="card z-index-0">
                             <div class="card-header text-center pt-4">
-                                <h5>Register with</h5>
+                                <h5>Register</h5>
                             </div>
                             <div class="card-body">
                                 <form role="form text-left" action="{{ route('users.store') }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
                                         <input type="text" class="form-control" name="username" placeholder="Username"
-                                            aria-label="Username" id="username" aria-describedby="email-addon">
+                                            aria-label="Username" value="{{ old('username') }}" id="username"
+                                            aria-describedby="email-addon">
                                     </div>
                                     @error('username')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                                     <div class="mb-3">
                                         <input type="text" class="form-control" name="full_name" placeholder="Full name"
-                                            aria-label="Full name" aria-describedby="email-addon">
+                                            aria-label="Full name" value="{{ old('full_name') }}"
+                                            aria-describedby="email-addon">
                                     </div>
                                     <div class="mb-3">
                                         <input type="email" class="form-control" name="email" placeholder="Email"
-                                            aria-label="Email" aria-describedby="email-addon">
+                                            aria-label="Email" value="{{ old('email') }}" aria-describedby="email-addon">
                                     </div>
                                     {{-- <div class="mb-3">
                                         <input type="tel" class="form-control" name="tlp" placeholder="Telephone"
@@ -47,7 +49,8 @@
                                     </div> --}}
                                     <div class="mb-3">
                                         <input type="password" class="form-control" name="password" placeholder="Password"
-                                            aria-label="Password" aria-describedby="password-addon">
+                                            aria-label="Password" value="{{ old('password') }}"
+                                            aria-describedby="password-addon">
                                     </div>
                                     <div class="form-check form-check-info text-left">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"

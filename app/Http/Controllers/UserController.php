@@ -32,39 +32,37 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $dataUser = $request->validate([
+        // Validasi data
+        $request->validate([
             'username' => ['string', 'min:6', 'max:25', 'alpha_num', 'unique:users,username', 'required'],
             'full_name' => ['string', 'required'],
             'email' => ['email', 'unique:users,email', 'required'],
             'password' => ['string', 'min:6', 'required'],
-            'role' => ['nullable', 'integer']
         ]);
 
         // Hash password
-        $dataUser['password'] = Hash::make($dataUser['password']);
+        $dataUser['password'] = Hash::make($request->password);
 
-        // Handle nullable role
-        if (!isset($dataUser['role'])) {
-            unset($dataUser['role']); // remove 'role' from $dataUser if it's not set
+        // Cek apakah pengguna sudah ada
+        $userAlreadyExist = User::where('username', $request->username)
+            ->orWhere('email', $request->email)->first();
+
+        if ($userAlreadyExist) {
+            return back()->withErrors(['username' => 'Username or email already exists.']);
         }
 
         try {
+            // Buat pengguna baru
             User::create($dataUser);
 
-            // return response()->json([
-            //     'message' => 'Berhasil Membuat Akun',
-            //     'data' => $dataUser
-            // ], 202);
-
-            return back();
+            return back()->with('success', 'User created successfully.');
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => 'Gagal Membuat Akun',
-                'error' => $th->getMessage()
-            ], 400);
+            return back()->withErrors(['error' => 'Failed to create user.'])->withInput();
         }
     }
+
+
 
     /**
      * Display the specified resource.
@@ -88,22 +86,25 @@ class UserController extends Controller
     public function update(Request $request, string $username)
     {
         $dataUser = $request->validate([
-            'role' => ['integer', 'nullable']
+            'username' => ['string', 'min:6', 'max:25', 'alpha_num', 'unique:users,username', 'required'],
+            'full_name' => ['string', 'required'],
+            'email' => ['email', 'unique:users,email', 'required'],
+            'role' => ['integer']
         ]);
 
         try {
             User::where('username', $username)->update([
-                'role' => $request->role
+                $dataUser
             ]);
 
             return response()->json([
-                'message' => 'Berhasil Mengubah Role',
+                'message' => 'Berhasil Update User',
                 'data' => $dataUser
             ], 202);
 
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => 'Gagal Mengubah Role',
+                'message' => 'Gagal Update User',
                 'error' => $th->getMessage()
             ], 400);
         }
