@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
+
+Route::view('/login', 'login')->name('login');
+Route::view('/register', 'register')->name('register');
+
+Route::get('/dashboard', [AdminController::class, 'show_user'])->name('dashboard.admin');
+Route::view('/home', 'roles.customer.index')->name('dashboard.customer');
