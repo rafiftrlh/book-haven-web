@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <a href="" class="btn bg-gradient-primary">Logout</a>
+                <a href="/" class="btn bg-gradient-primary">Logout</a>
             </div>
         </div>
     </div>

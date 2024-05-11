@@ -68,7 +68,7 @@
                                                         data-book-id="{{ $user->id }}">
                                                         Edit
                                                     </button>
-                                                    {{-- @include('partials.modals.edit_siswa') --}}
+                                                    @include('partials.user.__edit_user')
                                                     <form action="{{ route('users.destroy', $user->id) }}"
                                                         method="POST">
                                                         @csrf

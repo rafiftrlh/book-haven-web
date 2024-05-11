@@ -27,34 +27,35 @@
                                 <form role="form text-left" action="{{ route('users.store') }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="username" placeholder="Username"
-                                            aria-label="Username" value="{{ old('username') }}" id="username"
-                                            aria-describedby="email-addon">
+                                        <input required type="text" class="form-control" name="username"
+                                            placeholder="Username" aria-label="Username" value="{{ old('username') }}"
+                                            id="username" aria-describedby="email-addon">
                                     </div>
                                     @error('username')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="full_name" placeholder="Full name"
-                                            aria-label="Full name" value="{{ old('full_name') }}"
+                                        <input required type="text" class="form-control" name="full_name"
+                                            placeholder="Full name" aria-label="Full name" value="{{ old('full_name') }}"
                                             aria-describedby="email-addon">
                                     </div>
                                     <div class="mb-3">
-                                        <input type="email" class="form-control" name="email" placeholder="Email"
-                                            aria-label="Email" value="{{ old('email') }}" aria-describedby="email-addon">
+                                        <input required type="email" class="form-control" name="email"
+                                            placeholder="Email" aria-label="Email" value="{{ old('email') }}"
+                                            aria-describedby="email-addon">
                                     </div>
                                     {{-- <div class="mb-3">
-                                        <input type="tel" class="form-control" name="tlp" placeholder="Telephone"
+                                        <input required type="tel" class="form-control" name="tlp" placeholder="Telephone"
                                             aria-label="Telephone" aria-describedby="email-addon">
                                     </div> --}}
                                     <div class="mb-3">
-                                        <input type="password" class="form-control" name="password" placeholder="Password"
-                                            aria-label="Password" value="{{ old('password') }}"
+                                        <input required type="password" class="form-control" name="password"
+                                            placeholder="Password" aria-label="Password" value="{{ old('password') }}"
                                             aria-describedby="password-addon">
                                     </div>
                                     <div class="form-check form-check-info text-left">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
-                                            checked>
+                                        <input required class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" checked>
                                         <label class="form-check-label" for="flexCheckDefault">
                                             I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms
                                                 and Conditions</a>

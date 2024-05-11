@@ -16,16 +16,17 @@
                                     @csrf
                                     <label>Username</label>
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" placeholder="Username"
+                                        <input required type="text" class="form-control" placeholder="Username"
                                             aria-label="Username" aria-describedby="email-addon" name="username">
                                     </div>
                                     <label>Password</label>
                                     <div class="mb-3">
-                                        <input type="password" class="form-control" placeholder="Password"
+                                        <input required type="password" class="form-control" placeholder="Password"
                                             aria-label="Password" aria-describedby="password-addon" name="password">
                                     </div>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
+                                        <input required class="form-check-input" type="checkbox" id="rememberMe"
+                                            checked="">
                                         <label class="form-check-label" for="rememberMe">Remember me</label>
                                     </div>
                                     <div class="text-center">
