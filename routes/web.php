@@ -21,6 +21,19 @@ Route::get('/', function () {
 
 Route::view('/login', 'login')->name('login');
 Route::view('/register', 'register')->name('register');
+Route::view('/bookcatalog', '__bookcatalog')->name('bookcatalog');
+
 
 Route::get('/dashboard', [AdminController::class, 'show_user'])->name('dashboard.admin');
 Route::view('/home', 'roles.customer.index')->name('dashboard.customer');
+Route::view('/notification', 'roles.customer.index')->name('dashboard.notification');
+Route::get('/bookcatalog', function () {
+    $categories = ["all", "fiction", "non fiction", "history", "arts", "science and technology"];
+   return view( 'roles.customer.index', compact("categories"));
+}
+)->name('bookcatalog');
+
+// web.php
+
+
+
