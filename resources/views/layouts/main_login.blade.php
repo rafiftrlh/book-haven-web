@@ -39,7 +39,7 @@
 </head>
 
 <body class="">
-    <main class="main-content  mt-0">
+    <main class="main-content mt-0">
         @yield('login_content')
     </main>
     <!--   Core JS Files   -->

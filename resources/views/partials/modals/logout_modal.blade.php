@@ -10,7 +10,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <a href="/" class="btn bg-gradient-primary">Logout</a>
+                <form action="">
+
+                    <a href="{{ route('logout') }}" class="btn bg-gradient-primary">Logout</a>
+                </form>
             </div>
         </div>
     </div>

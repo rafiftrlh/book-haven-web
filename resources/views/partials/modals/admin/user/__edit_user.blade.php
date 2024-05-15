@@ -12,7 +12,6 @@
             </div>
             <div class="modal-body">
                 <form action="{{ route('users.update', $user->id) }}" method="POST">
-                    {{ route('users.update', $user->id) }}
                     @method('PATCH')
                     @csrf
                     {{-- <input type="hidden" id="editUserId" value="{{ $user->id }}"> --}}

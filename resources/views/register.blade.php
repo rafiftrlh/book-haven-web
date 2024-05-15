@@ -24,25 +24,31 @@
                                 <h5>Register</h5>
                             </div>
                             <div class="card-body">
-                                <form role="form text-left" action="{{ route('users.store') }}" method="POST">
+                                <form role="form text-left" action="{{ route('proses_register') }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
                                         <input required type="text" class="form-control" name="username"
                                             placeholder="Username" aria-label="Username" value="{{ old('username') }}"
                                             id="username" aria-describedby="email-addon">
+                                        @if ($errors->has('username'))
+                                            <span class="error"> * {{ $errors->first('username') }}</span>
+                                        @endif
                                     </div>
-                                    @error('username')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
                                     <div class="mb-3">
                                         <input required type="text" class="form-control" name="full_name"
                                             placeholder="Full name" aria-label="Full name" value="{{ old('full_name') }}"
                                             aria-describedby="email-addon">
+                                        @if ($errors->has('full_name'))
+                                            <span class="error"> * {{ $errors->first('full_name') }}</span>
+                                        @endif
                                     </div>
                                     <div class="mb-3">
                                         <input required type="email" class="form-control" name="email"
                                             placeholder="Email" aria-label="Email" value="{{ old('email') }}"
                                             aria-describedby="email-addon">
+                                        @if ($errors->has('email'))
+                                            <span class="error"> * {{ $errors->first('email') }}</span>
+                                        @endif
                                     </div>
                                     {{-- <div class="mb-3">
                                         <input required type="tel" class="form-control" name="tlp" placeholder="Telephone"
@@ -52,6 +58,9 @@
                                         <input required type="password" class="form-control" name="password"
                                             placeholder="Password" aria-label="Password" value="{{ old('password') }}"
                                             aria-describedby="password-addon">
+                                        @if ($errors->has('password'))
+                                            <span class="error"> * {{ $errors->first('password') }}</span>
+                                        @endif
                                     </div>
                                     <div class="form-check form-check-info text-left">
                                         <input required class="form-check-input" type="checkbox" value=""

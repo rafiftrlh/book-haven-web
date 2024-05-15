@@ -4,8 +4,11 @@
         navbar-scroll="true">
         <div class="container-fluid py-1 px-3">
             <nav aria-label="breadcrumb">
-                <h6 class="font-weight-bolder text-primary  fs-4 mb-0 =">Welcome</h6>
-                <h6 class="font-weight-bolder mb-0">{{ ucwords(request()->route()->uri) }}</h6>
+                <div class="d-flex align-items-center gap-2 justify-content-center mb-0">
+                    <p class="font-weight-bolder text-primary fs-4">Welcome</p>
+                    <p class="font-weight-bolder text-primary">{{ Auth::user()->username }}</p>
+                </div>
+                {{-- <h6 class="fw-semibold text-secondary mb-0">{{ ucwords(request()->route()->uri) }}</h6> --}}
                 {{-- {{ Auth::user()->id }} --}}
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">

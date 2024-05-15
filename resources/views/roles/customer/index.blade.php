@@ -8,12 +8,12 @@
     @include('partials.index.__sidebar')
 @endsection
 
-    @section('content')
-        @if (request()->is('home'))
-            @include('roles.customer.__book')
-        @elseif (request()->is('bookcatalog'))
-            @include('roles.customer.__bookcatalog')
-        @elseif  (request()->is('notification'))
+@section('content')
+    @if (request()->is('home'))
+        @include('roles.customer.__book')
+    @elseif (request()->is('bookcatalog'))
+        @include('roles.customer.__bookcatalog')
+    @elseif (request()->is('notification'))
         @include('roles.customer.__notification')
-        @endif
-    @endsection
+    @endif
+@endsection
