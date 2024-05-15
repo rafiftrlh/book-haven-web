@@ -67,7 +67,7 @@ class AuthController extends Controller
             }
             // tapi jika role user nya user biasa maka arahkan ke halaman user
             else if ($user->role == 3) {
-                return redirect()->intended('user');
+                return redirect()->intended('home');
             }
             // jika belum ada role maka ke halaman /
             return redirect()->intended('/');

@@ -6,13 +6,14 @@
                 </button>
                 @include('partials.modals.admin.user.__create_user')
                 <br>
-                <div class="btn-group mt-4" role="group">
-                    <button id="btn-all" type="button" class="btn btn-secondary" onclick="filterUsers(0)">All</button>
-                    <button id="btn-admin" type="button" class="btn btn-secondary"
+                <div class="mt-2 btn-group-role" role="group">
+                    <button id="btn-all" type="button" class="btn btn-secondary "
+                        onclick="filterUsers(0)">All</button>
+                    <button id="btn-admin" type="button" class="btn btn-secondary "
                         onclick="filterUsers(1)">Admin</button>
-                    <button id="btn-officer" type="button" class="btn btn-secondary"
+                    <button id="btn-officer" type="button" class="btn btn-secondary "
                         onclick="filterUsers(2)">Officer</button>
-                    <button id="btn-customer" type="button" class="btn btn-secondary"
+                    <button id="btn-customer" type="button" class="btn btn-secondary "
                         onclick="filterUsers(3)">Customer</button>
                 </div>
                 <div class="mt-4">
@@ -104,7 +105,7 @@
                     updateTable(data);
 
                     // Menambahkan kelas "active" ke tombol yang sesuai
-                    $('.btn-group .btn').removeClass('btn-info');
+                    $('.btn-group-role .btn').removeClass('btn-info');
                     if (role == 0) {
                         $('#btn-all').addClass('btn-info');
                     } else if (role == 1) {
