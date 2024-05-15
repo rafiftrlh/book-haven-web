@@ -14,7 +14,7 @@
                     <div class="modal-body container-fluid">
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input autocomplete="off" type="username"
+                            <input required autocomplete="off" type="username"
                                 class="form-control @error('username') is-invalid @enderror" id="username"
                                 name="username" value="{{ old('username') }}">
                             @error('username')
@@ -22,7 +22,7 @@
                             @enderror
 
                             <label for="full_name" class="form-label">Full name</label>
-                            <input autocomplete="off" type="text"
+                            <input required autocomplete="off" type="text"
                                 class="form-control @error('full_name') is-invalid @enderror" id="full_name"
                                 name="full_name" value="{{ old('full_name') }}">
                             @error('full_name')
@@ -30,7 +30,7 @@
                             @enderror
 
                             <label for="password" class="form-label">Password</label>
-                            <input autocomplete="off" type="password"
+                            <input required autocomplete="off" type="password"
                                 class="form-control @error('password') is-invalid @enderror" id="password"
                                 name="password" value="{{ old('password') }}">
                             @error('password')
@@ -38,7 +38,7 @@
                             @enderror
 
                             <label for="email" class="form-label">Email</label>
-                            <input autocomplete="off" type="email"
+                            <input required autocomplete="off" type="email"
                                 class="form-control @error('email') is-invalid @enderror" id="email" name="email"
                                 value="{{ old('email') }}">
                             @error('email')
@@ -46,7 +46,7 @@
                             @enderror
 
                             <label for="role" class="form-label">Role</label>
-                            <input autocomplete="off" type="number"
+                            <input required autocomplete="off" type="number"
                                 class="form-control @error('role') is-invalid @enderror" id="role" name="role"
                                 value="{{ old('role') }}">
                             @error('role')

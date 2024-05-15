@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-    @if (request()->is('dashboard'))
+    @if (request()->is('admin'))
         @include('roles.admin.__data_user')
     @endif
 @endsection

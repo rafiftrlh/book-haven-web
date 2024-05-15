@@ -83,24 +83,19 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $username)
+    public function update(Request $request, string $id)
     {
         $dataUser = $request->validate([
-            'username' => ['string', 'min:6', 'max:25', 'alpha_num', 'unique:users,username', 'required'],
-            'full_name' => ['string', 'required'],
-            'email' => ['email', 'unique:users,email', 'required'],
+            'username' => ['string', 'min:6', 'max:25', 'alpha_num'],
+            'full_name' => ['string'],
+            'email' => ['email'],
             'role' => ['integer']
         ]);
 
         try {
-            User::where('username', $username)->update([
-                $dataUser
-            ]);
+            User::findOrFail($id)->update($dataUser);
 
-            return response()->json([
-                'message' => 'Berhasil Update User',
-                'data' => $dataUser
-            ], 202);
+            return back();
 
         } catch (\Throwable $th) {
             return response()->json([

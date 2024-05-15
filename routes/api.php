@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,3 +25,6 @@ use Illuminate\Support\Facades\Route;
 Route::put('/resetpw', [UserController::class, 'reset_pw'])->name('users.resetpw');
 
 Route::resource('users', UserController::class);
+
+Route::post('/admin/filter-by-role', [AdminController::class, 'filterByRole'])->name('admin.filterByRole');
+Route::get('/admin/search-users', [AdminController::class, 'searchUsers'])->name('admin.searchUsers');

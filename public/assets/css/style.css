@@ -1,16 +1,13 @@
-.bgnotif{
-  height: 510px;
-  background-color: white;
-  overflow-y: auto;
-  overflow-x: hidden;
- 
+.bgnotif {
+    height: 510px;
+    background-color: white;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 @media (max-width: 768px) {
-
-
     .card img {
-        position: relative; 
+        position: relative;
         border-radius: 10px;
         /* top: 10px; */
         left: 2px;
@@ -19,15 +16,12 @@
         margin-top: 1vw;
     }
 
-    .bgnotif{
+    .bgnotif {
         margin-top: 60px;
     }
 
-    .notif{
+    .notif {
         position: relative;
         left: -27px;
     }
-
-
-   
 }
