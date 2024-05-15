@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['middleware' => ['cek_login:3']], function () {
-        Route::view('home', 'roles.customer.index')->name('customer.hom');
+        Route::view('home', 'roles.customer.index')->name('customer.home');
         Route::view('notification', 'roles.customer.index')->name('customer.notification');
         Route::get(
             'bookcatalog',
