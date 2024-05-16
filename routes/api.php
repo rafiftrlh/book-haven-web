@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Models\Author;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,3 +32,4 @@ Route::post('/admin/filter-by-role', [AdminController::class, 'filterByRole'])->
 Route::get('/admin/search-users', [AdminController::class, 'searchUsers'])->name('admin.searchUsers');
 
 Route::resource('category', CategoryController::class);
+Route::resource('author', AuthorController::class);
