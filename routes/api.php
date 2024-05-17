@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Models\Author;
@@ -31,5 +32,6 @@ Route::resource('users', UserController::class);
 Route::post('/admin/filter-by-role', [AdminController::class, 'filterByRole'])->name('admin.filterByRole');
 Route::get('/admin/search-users', [AdminController::class, 'searchUsers'])->name('admin.searchUsers');
 
-Route::resource('category', CategoryController::class);
-Route::resource('author', AuthorController::class);
+Route::resource('categories', CategoryController::class);
+Route::resource('authors', AuthorController::class);
+Route::resource('books', BookController::class);

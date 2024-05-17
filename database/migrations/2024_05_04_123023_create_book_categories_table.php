@@ -11,11 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('book_categories', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('book_id');
             $table->unsignedBigInteger('category_id');
-            $table->timestamps();
-            $table->softDeletes();
 
             // Definisikan relasi
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
