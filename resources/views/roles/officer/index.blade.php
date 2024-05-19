@@ -1,4 +1,5 @@
 @extends('layouts.main_index')
+
 @section('navbar')
     @include('partials.index.__navbar')
 @endsection
@@ -8,7 +9,9 @@
 @endsection
 
 @section('content')
-    {{-- @if (request()->is('admin'))
-        @include('roles.admin.__data_user')
-    @endif --}}
+    @if (request()->is('officer'))
+        @include('roles.officer.__home_officer')
+    @elseif (request()->is('officer/add-category'))
+        @include('roles.officer.__add_category')
+    @endif
 @endsection
