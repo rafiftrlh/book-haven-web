@@ -14,17 +14,22 @@
     </div>
 
 
-    <div class="row row-cols-2 gap-2 justify-content-sm-between pt-3">
+    <div class="row row-cols-2 row-cols-md-2 row-cols-lg-4">
         @for ($i = 0; $i < 8; $i++)
-            <a href="/detail/{{ $i + 1 }}" style="width: 190px" class="col card py-2 shadow-lg">
-                <img src="assets/img/JUANDARA.jpg" style="border-radius: 10px; height: 180px; width: 150px;
-                    margin-top: 1vw;" class="card-img-top ms-2" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title text-dark">Juan Dara</h5>
-                    <p class="card-text text-dark">By Cut Putri Khairan</p>
-                    <p class="card-text text-dark">ID | 4.6</p>
+            <div class="col mb-4">
+                <div class="card" style="width: 100%;">
+                    <div class="card-header">
+                        <a href="/detailbuku" class="d-block text-center">
+                            <img src="assets/img/JUANDARA.jpg" class="border-radius-lg img-fluid mx-auto d-block" style="max-width: 90%; height: auto;"> <!-- Memperbesar gambar dan menengahkan -->
+                        </a>
+                    </div>
+                    <div class="card-body pt-2 text-left">
+                        <a href="javascript:;" class="card-title h5 d-block text-darker">JuanDara</a>
+                        <p class="card-description mb-2">By Cut Putri Khairan</p>
+                        <p class="card-description mb-1">ID | 4.6</p> 
+                    </div>
                 </div>
-            </a>
+            </div>
         @endfor
     </div>
 </div>
