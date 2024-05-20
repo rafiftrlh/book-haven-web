@@ -45,23 +45,34 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function readBooks()
+    public function borrowings()
     {
-        return $this->belongsToMany(Book::class, 'user_readings');
+        return $this->hasMany(Borrowing::class);
     }
 
-    public function borrowedBooks()
+    public function permissions()
     {
-        return $this->belongsToMany(Book::class, 'borrowings');
+        return $this->hasMany(Permission::class, 'approved_by');
     }
 
-    public function reviewedBooks()
+    public function readOnlines()
     {
-        return $this->belongsToMany(Book::class, 'reviews');
+        return $this->hasMany(ReadOnline::class);
     }
 
-    public function likes()
+    public function notifications()
     {
-        return $this->belongsToMany(User::class, 'favorite_books');
+        return $this->hasMany(Notification::class);
     }
+
+    public function userReadings()
+    {
+        return $this->hasMany(UserReading::class);
+    }
+
+    public function ratingBooks()
+    {
+        return $this->hasMany(RatingBook::class);
+    }
+
 }

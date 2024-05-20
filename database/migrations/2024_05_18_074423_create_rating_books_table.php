@@ -10,13 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('book_categories', function (Blueprint $table) {
+        Schema::create('rating_books', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
-            $table->unsignedBigInteger('category_id');
+            $table->decimal('rating', 3, 2)->nullable();
+            $table->text('review')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
 
             // Definisikan relasi
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 
@@ -25,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('book__categories');
+        Schema::dropIfExists('rating_books');
     }
 };

@@ -10,14 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('bookmarks', function (Blueprint $table) {
+        Schema::create('read_onlines', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
+            $table->enum('approval_status', ['Menunggu Persetujuan', 'Disetujui', 'Ditolak'])->nullable();
+            $table->dateTime('read_end_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            // Define foreign key constraints
+            // Definisikan relasi
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
         });
@@ -28,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookmarks');
+        Schema::dropIfExists('read_onlines');
     }
 };

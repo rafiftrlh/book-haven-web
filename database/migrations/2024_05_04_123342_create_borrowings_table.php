@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->dateTime('due_date')->nullable();
             $table->enum('status', ['Dipinjam', 'Dikembalikan'])->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             // Define foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -11,13 +11,17 @@ class Book extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'book_code',
         'title_book',
         'cover',
+        'synopsis',
         'language',
-        'stock',
-        'total_rating',
-        'total_readers',
     ];
+
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
 
     public function authors()
     {
@@ -29,23 +33,23 @@ class Book extends Model
         return $this->belongsToMany(Category::class, 'book_categories');
     }
 
-    public function readers()
+    public function conditionBooks()
     {
-        return $this->belongsToMany(User::class, 'user_readings');
+        return $this->hasMany(ConditionBook::class);
     }
 
-    public function borrowers()
+    public function readOnlines()
     {
-        return $this->belongsToMany(User::class, 'borrowings');
+        return $this->hasMany(ReadOnline::class);
     }
 
-    public function reviewers()
+    public function userReadings()
     {
-        return $this->belongsToMany(User::class, 'reviews');
+        return $this->hasMany(UserReading::class);
     }
 
-    public function favored()
+    public function ratingBooks()
     {
-        return $this->belongsToMany(User::class, 'favorite_books');
+        return $this->hasMany(RatingBook::class);
     }
 }

@@ -13,8 +13,9 @@ return new class extends Migration {
         Schema::create('fines', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('borrowing_id');
-            $table->decimal('fine_amount', 10, 2);
-            $table->text('reason');
+            $table->enum('condition', ['rusak', 'hilang', 'telat mengembalikan']);
+            $table->string('type', 20);
+            $table->integer('price')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
