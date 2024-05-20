@@ -72,6 +72,13 @@ class UserController extends Controller
         //
     }
 
+    public function Showdetailbuku()
+    {
+        // Lakukan apa pun yang diperlukan di sini, seperti memuat data
+        // dan kembalikan tampilan yang sesuai
+        return view('roles.customer.__detailbuku');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

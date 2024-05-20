@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,12 +56,15 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {
-        Route::view('officer', AdminController::class);
+        Route::get('officer', [OfficerController::class, 'index'])->name("officer.home");
+        Route::get('officer/add-category', [OfficerController::class, 'AddCategory'])->name('officer.add_category');
     });
 
     Route::group(['middleware' => ['cek_login:3']], function () {
         Route::view('home', 'roles.customer.index')->name('customer.home');
         Route::view('notification', 'roles.customer.index')->name('customer.notification');
+        Route::get('detailbuku', [UserController::class, 'Showdetailbuku'])->name('customer.detail');
+
         Route::get(
             'bookcatalog',
             function () {
@@ -70,7 +74,12 @@ Route::group(['middleware' => ['auth']], function () {
         )->name('customer.bookcatalog');
 
     });
+    // route untuk petugas
+
+
 });
+
+
 
 // Route::get('/dashboard', [AdminController::class, 'show_user'])->name('dashboard.admin');
 // Route::view('/home', 'roles.customer.index')->name('dashboard.customer');
