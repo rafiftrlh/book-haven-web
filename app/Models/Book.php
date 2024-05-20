@@ -18,6 +18,11 @@ class Book extends Model
         'language',
     ];
 
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
+
     public function authors()
     {
         return $this->belongsToMany(Author::class, 'book_authors');
@@ -28,13 +33,23 @@ class Book extends Model
         return $this->belongsToMany(Category::class, 'book_categories');
     }
 
-    public function readers()
+    public function conditionBooks()
     {
-        return $this->belongsToMany(User::class, 'user_readings');
+        return $this->hasMany(ConditionBook::class);
     }
 
-    public function borrowers()
+    public function readOnlines()
     {
-        return $this->belongsToMany(User::class, 'borrowings');
+        return $this->hasMany(ReadOnline::class);
+    }
+
+    public function userReadings()
+    {
+        return $this->hasMany(UserReading::class);
+    }
+
+    public function ratingBooks()
+    {
+        return $this->hasMany(RatingBook::class);
     }
 }

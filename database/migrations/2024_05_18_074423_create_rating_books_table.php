@@ -10,17 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('borrowings', function (Blueprint $table) {
+        Schema::create('rating_books', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
-            $table->dateTime('borrow_date');
-            $table->dateTime('return_date')->nullable();
-            $table->dateTime('due_date')->nullable();
-            $table->enum('status', ['Dipinjam', 'Dikembalikan'])->nullable();
+            $table->decimal('rating', 3, 2)->nullable();
+            $table->text('review')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
-            // Define foreign key constraints
+            // Definisikan relasi
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
         });
@@ -31,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('borrowings');
+        Schema::dropIfExists('rating_books');
     }
 };

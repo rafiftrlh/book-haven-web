@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserReading extends Model
+class RatingBook extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $fillable = ['user_id', 'book_id', 'rating', 'review'];
 
     public function user()
     {
@@ -19,4 +21,5 @@ class UserReading extends Model
     {
         return $this->belongsTo(Book::class);
     }
+
 }
