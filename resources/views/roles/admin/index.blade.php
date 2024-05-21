@@ -12,5 +12,7 @@
         @include('roles.admin.__data_user')
     @elseif (request()->is('admin/categories'))
         @include('roles.admin.__data_categories')
+    @elseif (request()->is('admin/authors'))
+        @include('roles.admin.__data_authors')
     @endif
 @endsection

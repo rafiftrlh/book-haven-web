@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,6 +48,13 @@ class AdminController extends Controller
         return view('roles.admin.index', compact('categories'));
     }
 
+    public function authors()
+    {
+        $authors = Author::withTrashed()->orderBy('deleted_at')->get();
+
+        return view('roles.admin.index', compact('authors'));
+    }
+
     public function searchCategories(Request $request)
     {
         $query = $request->input('query');
@@ -56,5 +64,16 @@ class AdminController extends Controller
             ->get();
 
         return response()->json($categories);
+    }
+
+    public function searchAuthors(Request $request)
+    {
+        $query = $request->input('query');
+        $authors = Author::withTrashed()->orderBy('deleted_at')->where(function ($queryBuilder) use ($query) {
+            $queryBuilder->where('name', 'LIKE', "%{$query}%");
+        })
+            ->get();
+
+        return response()->json($authors);
     }
 }
