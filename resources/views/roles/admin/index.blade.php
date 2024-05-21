@@ -10,5 +10,7 @@
 @section('content')
     @if (request()->is('admin'))
         @include('roles.admin.__data_user')
+    @elseif (request()->is('admin/categories'))
+        @include('roles.admin.__data_categories')
     @endif
 @endsection
