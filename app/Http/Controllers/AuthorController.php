@@ -32,18 +32,16 @@ class AuthorController extends Controller
             'name' => ['string', 'min:3', 'max:25', 'unique:categories,name', 'required'],
         ]);
 
-        // kalau gagal kembali ke halaman create author dengan munculkan pesan error
-        // if ($validator->fails()) {
-        //     return redirect('admin/categories/create')
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
+        if ($validator->fails()) {
+            return redirect('admin/authors')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         // masukkan semua data pada request ke table categories
         Author::create($request->all());
 
-        // kalo berhasil arahkan ke halaman login
-        // return redirect()->route('categories');
+        return back();
     }
 
     /**
@@ -69,18 +67,18 @@ class AuthorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'name' => ['string', 'min:3', 'max:25', 'unique:categories,name', 'required'],
         ]);
 
         try {
-            Author::findOrFail($id)->update($request->all());
+            Author::findOrFail($id)->update(['name' => strtolower($request->name)]);
 
-            // return back();
+            return back();
 
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => 'Gagal Update User',
+                'message' => 'Gagal Update Author',
                 'error' => $th->getMessage()
             ], 400);
         }
@@ -104,14 +102,33 @@ class AuthorController extends Controller
             // Hapus pengguna
             $authorCheck->delete();
 
-            // return back();
-
-            return response()->json([
-                'message' => 'Berhasil Menghapus Author !!',
-                'data' => $authorCheck
-            ]);
+            return back();
         } catch (\Throwable $th) {
             throw $th;
         }
     }
+
+    public function filterByDeletedStatus(Request $request)
+    {
+        $status = $request->status;
+
+        if ($status == 'all') {
+            $authors = Author::withTrashed()->orderBy('deleted_at')->get();
+        } elseif ($status == 'deleted') {
+            $authors = Author::onlyTrashed()->orderBy('name')->get();
+        } else {
+            $authors = Author::orderBy('name')->get();
+        }
+
+        return response()->json($authors);
+    }
+
+    public function restore($id)
+    {
+        $author = Author::onlyTrashed()->findOrFail($id);
+        $author->restore();
+
+        return response()->json(['message' => 'Author restored successfully.']);
+    }
+
 }

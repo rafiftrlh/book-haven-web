@@ -74,7 +74,8 @@
                                                     data-bs-target="#editUser_{{ $user->id }}"
                                                     data-book-id="{{ $user->id }}">Edit</button>
                                                 @include('partials.modals.admin.user.__edit_user')
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -196,7 +197,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="/api/users/${user.id}" method="POST">
+                        <form action="/api/users/${user.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
