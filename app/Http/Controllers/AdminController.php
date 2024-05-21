@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,5 +38,23 @@ class AdminController extends Controller
             ->get();
 
         return response()->json($users);
+    }
+
+    public function categories()
+    {
+        $categories = Category::withTrashed()->orderBy('deleted_at')->get();
+
+        return view('roles.admin.index', compact('categories'));
+    }
+
+    public function searchCategories(Request $request)
+    {
+        $query = $request->input('query');
+        $categories = Category::withTrashed()->orderBy('deleted_at')->where(function ($queryBuilder) use ($query) {
+            $queryBuilder->where('name', 'LIKE', "%{$query}%");
+        })
+            ->get();
+
+        return response()->json($categories);
     }
 }

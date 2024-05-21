@@ -148,7 +148,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{ route('users.update', $user->id) }}" method="POST">
+                                        <form action="/api/users/${user.id}" method="POST">
                                             @method('PATCH')
                                             @csrf
                                             {{-- <input type="hidden" id="editUserId" value="${user.id}"> --}}
@@ -196,7 +196,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                        <form action="/api/users/${user.id}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>

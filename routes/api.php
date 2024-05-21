@@ -31,7 +31,11 @@ Route::resource('users', UserController::class);
 
 Route::post('/admin/filter-by-role', [AdminController::class, 'filterByRole'])->name('admin.filterByRole');
 Route::get('/admin/search-users', [AdminController::class, 'searchUsers'])->name('admin.searchUsers');
+Route::get('/admin/search-categories', [AdminController::class, 'searchCategories'])->name('admin.searchCategories');
 
 Route::resource('categories', CategoryController::class);
+Route::post('/categories/filterByDeletedStatus', [CategoryController::class, 'filterByDeletedStatus'])->name('categories.filterByDeletedStatus');
+Route::post('/categories/restoreCategory/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
+
 Route::resource('authors', AuthorController::class);
 Route::resource('books', BookController::class);

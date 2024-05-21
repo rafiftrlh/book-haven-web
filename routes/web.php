@@ -52,7 +52,8 @@ Route::post('proses_register', [AuthController::class, 'proses_register'])->name
 // jika user yang login merupakan user biasa maka akan diarahkan ke UserController
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['cek_login:1']], function () {
-        Route::get('admin', [AdminController::class, 'index']);
+        Route::get('admin', [AdminController::class, 'index'])->name('admin.user');
+        Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {

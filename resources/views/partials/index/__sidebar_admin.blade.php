@@ -17,8 +17,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('admin') ? 'active' : '' }}" href="">
-
+                <a class="nav-link {{ request()->is('admin') ? 'active' : '' }}" href="{{ route('admin.user') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="21" height="24" viewBox="0 0 448 512"
@@ -70,6 +69,23 @@
                         </svg>
                     </div>
                     <span class="nav-link-text ms-1">Data Siswa</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('admin/categories') ? 'active' : '' }}"
+                    href="{{ route('admin.categories') }}">
+                    <div
+                        class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            style="fill: {{ request()->is('admin/categories') ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 1)' }} ;transform: ;msFilter:;">
+                            <path
+                                d="M11.15 3.4L7.43 9.48c-.41.66.07 1.52.85 1.52h7.43c.78 0 1.26-.86.85-1.52L12.85 3.4a.993.993 0 0 0-1.7 0" />
+                            <circle cx="17.5" cy="17.5" r="4.5" />
+                            <path
+                                d="M4 21.5h6c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1" />
+                        </svg>
+                    </div>
+                    <span class="nav-link-text ms-1">Categories</span>
                 </a>
             </li>
         </ul>

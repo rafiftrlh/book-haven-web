@@ -36,17 +36,15 @@ class CategoryController extends Controller
         ]);
 
         // kalau gagal kembali ke halaman create category dengan munculkan pesan error
-        // if ($validator->fails()) {
-        //     return redirect('admin/categories/create')
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
+        if ($validator->fails()) {
+            return redirect('admin/categories')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
-        // masukkan semua data pada request ke table categories
         Category::create($request->all());
 
-        // kalo berhasil arahkan ke halaman login
-        // return redirect()->route('categories');
+        return back();
     }
 
     /**
@@ -72,14 +70,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'name' => ['string', 'min:3', 'max:25', 'unique:categories,name', 'required'],
         ]);
 
         try {
-            Category::findOrFail($id)->update($request->all());
+            Category::findOrFail($id)->update(['name' => strtolower($request->name)]);
 
-            // return back();
+            return back();
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -107,14 +105,32 @@ class CategoryController extends Controller
             // Hapus pengguna
             $categoryCheck->delete();
 
-            // return back();
-
-            return response()->json([
-                'message' => 'Berhasil Menghapus Category !!',
-                'data' => $categoryCheck
-            ]);
+            return back();
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function filterByDeletedStatus(Request $request)
+    {
+        $status = $request->status;
+
+        if ($status == 'all') {
+            $categories = Category::withTrashed()->orderBy('deleted_at')->get();
+        } elseif ($status == 'deleted') {
+            $categories = Category::onlyTrashed()->orderBy('name')->get();
+        } else {
+            $categories = Category::orderBy('name')->get();
+        }
+
+        return response()->json($categories);
+    }
+
+    public function restore($id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+
+        return response()->json(['message' => 'Category restored successfully.']);
     }
 }
