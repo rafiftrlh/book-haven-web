@@ -60,6 +60,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['cek_login:2']], function () {
         Route::get('officer', [OfficerController::class, 'index'])->name("officer.home");
         Route::get('officer/add-category', [OfficerController::class, 'AddCategory'])->name('officer.add_category');
+        Route::get('officer/confirm_peminjaman', [OfficerController::class, 'peminjaman'])->name('officer.confirm_peminjaman');
+        Route::get('officer/add_author', [OfficerController::class, 'AddAuthor'])->name('officer.add_author');
     });
 
     Route::group(['middleware' => ['cek_login:3']], function () {

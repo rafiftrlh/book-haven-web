@@ -1,4 +1,4 @@
-<form class="ms-1">
+<form class="ms-1" id="addcategory">
     <p class="fs-5 mb-2 text-center text-dark" style="font-weight: bold;">Add Category</p>
     <div class="form-group">
         <div class="mb-4">
@@ -7,72 +7,71 @@
         </div>
         <div class="d-flex gap-3">
             <button type="button" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-danger pl-2">Reset</button>
-        </div>
-        <div class="card mb-4 mt-4">
-            <div class="card-header pb-0">
-                <h6>Data Category</h6>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th
-                                    class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
-                                    Category</th>
-                                <th
-                                    class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
-                                    Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="user-table-body">
-                            <tr>
-                                <td>
-                                    <p class="text-xs text-secondary mb-0 px-3">
-                                        Comedy
-                                    </p>
-                                </td>
-                                <td class="d-flex gap-3 px-3">
-                                    <button type="button" id="editButton" class="btn bg-gradient-info">Edit</button>
-                                    <form action="">
-                                        <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="text-xs text-secondary mb-0 px-3">
-                                        Comedy
-                                    </p>
-                                </td>
-                                <td class="d-flex gap-3 px-3">
-                                    <button type="button" id="editButton" class="btn bg-gradient-info">Edit</button>
-                                    <form action="">
-                                        <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="text-xs text-secondary mb-0 px-3">
-                                        Comedy
-                                    </p>
-                                </td>
-                                <td class="d-flex gap-3 px-3">
-                                    <button type="button" id="editButton" class="btn bg-gradient-info">Edit</button>
-                                    <form action="">
-                                        <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <button type="button" class="btn btn-danger pl-2" id="resetBtn">Reset</button>
         </div>
     </div>
 </form>
+<div class="card mb-4 mt-4">
+    <div class="card-header pb-0">
+        <h6>Data Category</h6>
+    </div>
+    <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+            <table class="table align-items-center">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                            Category</th>
+                        <th class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                            Action</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    <tr>
+                        <td>
+                            <p class="text-xs text-secondary mb-0 px-3">
+                                Comedy
+                            </p>
+                        </td>
+                        <td class="d-flex gap-3 px-3">
+                            <button type="button" id="editButton" class="btn bg-gradient-info">Edit</button>
+                           
+                                <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="text-xs text-secondary mb-0 px-3">
+                                Comedy
+                            </p>
+                        </td>
+                        <td class="d-flex gap-3 px-3">
+                            <button type="button" id="editButton" class="btn bg-gradient-info">Edit</button>
+                            
+                                <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="text-xs text-secondary mb-0 px-3">
+                                Comedy
+                            </p>
+                        </td>
+                        <td class="d-flex gap-3 px-3">
+                            <button type="button" id="editButton" class="btn bg-gradient-info">Edit</button>
+                           
+                                <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     function handleEditButtonClick() {
@@ -99,4 +98,8 @@
 
 
     document.getElementById("deleteButton").addEventListener("click", handleDeleteButtonClick);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+        document.getElementById('addcategory').reset();
+    });
 </script>
