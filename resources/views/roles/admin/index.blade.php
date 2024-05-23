@@ -9,7 +9,11 @@
 
 @section('content')
     @if (request()->is('admin'))
-        @include('roles.admin.__data_user')
+        @include('roles.admin.__home')
+    @elseif (request()->is('admin/users'))
+        @include('roles.admin.__data_users')
+    @elseif (request()->is('admin/books'))
+        @include('roles.admin.__data_books')
     @elseif (request()->is('admin/categories'))
         @include('roles.admin.__data_categories')
     @elseif (request()->is('admin/authors'))

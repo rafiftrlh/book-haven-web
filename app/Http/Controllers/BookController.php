@@ -73,10 +73,10 @@ class BookController extends Controller
         ]);
 
         $book = new Book();
-        $book->book_code = $validated['book_code'];
+        $book->book_code = strtolower($validated['book_code']);
         $book->title_book = strtolower($validated['title_book']);
         $book->synopsis = $validated['synopsis'];
-        $book->language = $validated['language'];
+        $book->language = strtolower($validated['language']);
         $book->stock = $validated['stock'];
 
         if ($request->hasFile('cover')) {
@@ -156,7 +156,8 @@ class BookController extends Controller
         // Alert::success('Success', 'Buku Behasil di Edit!');
 
         // Jika berhasil, kembalikan respons sukses
-        return response()->json(['message' => 'Book updated successfully'], 200);
+        // return response()->json(['message' => 'Book updated successfully'], 200);
+        return back();
     }
 
     /**

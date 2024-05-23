@@ -16,6 +16,7 @@ class Book extends Model
         'cover',
         'synopsis',
         'language',
+        'stock'
     ];
 
     public function borrowings()
