@@ -15,4 +15,15 @@ class OfficerController extends Controller
         return view("roles.officer.index");
     }
 
+    public function peminjaman()
+    {
+        return view("roles.officer.index");
+    }
+
+    public function AddAuthor()
+    {
+        return view("roles.officer.index");
+    }
+
+
 }
