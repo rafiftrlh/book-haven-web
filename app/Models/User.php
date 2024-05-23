@@ -50,11 +50,6 @@ class User extends Authenticatable
         return $this->hasMany(Borrowing::class);
     }
 
-    public function permissions()
-    {
-        return $this->hasMany(Permission::class, 'approved_by');
-    }
-
     public function readOnlines()
     {
         return $this->hasMany(ReadOnline::class);

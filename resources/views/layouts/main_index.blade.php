@@ -36,6 +36,9 @@
     <!-- Nepcha Analytics (nepcha.com) -->
     <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
     <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+
+    @yield('links')
+
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -89,6 +92,7 @@
             </div>
         </div>
     </div>
+    @yield('scripts')
     <!--   Core JS Files   -->
     <script src="../assets/js/core/popper.min.js"></script>
     <script src="../assets/js/core/bootstrap.min.js"></script>

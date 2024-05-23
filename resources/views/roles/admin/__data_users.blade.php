@@ -1,4 +1,4 @@
-    <div class="container-fluid py-4">
+    <div class="container-fluid p-4">
         <div class="row">
             <div class="col-12">
                 <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#createUser">

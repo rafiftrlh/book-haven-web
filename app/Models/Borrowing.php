@@ -9,8 +9,16 @@ class Borrowing extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'book_id', 'borrow_date', 'return_date', 'due_date', 'status'];
-
+    protected $fillable = [
+        'user_id',
+        'book_id',
+        'borrow_date',
+        'return_date',
+        'due_date',
+        'status',
+        'approved_by',
+        'permission_date'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -19,11 +27,6 @@ class Borrowing extends Model
     public function book()
     {
         return $this->belongsTo(Book::class);
-    }
-
-    public function permissions()
-    {
-        return $this->hasMany(Permission::class);
     }
 
     public function conditionBooks()

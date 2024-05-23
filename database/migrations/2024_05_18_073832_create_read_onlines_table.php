@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
-            $table->enum('approval_status', ['Menunggu Persetujuan', 'Disetujui', 'Ditolak'])->nullable();
+            $table->enum('approval_status', ['Menunggu Persetujuan', 'Disetujui', 'Ditolak'])->default('Menunggu Persetujuan');
             $table->dateTime('read_end_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
