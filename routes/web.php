@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('admin', [AdminController::class, 'index'])->name('admin.home');
         Route::get('admin/users', [AdminController::class, 'users'])->name('admin.users');
         Route::get('admin/books', [AdminController::class, 'books'])->name('admin.books');
+        Route::get('admin/books-create', [AdminController::class, 'createBook'])->name('admin.books.create');
         Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
         Route::get('admin/authors', [AdminController::class, 'authors'])->name('admin.authors');
     });

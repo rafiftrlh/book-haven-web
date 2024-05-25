@@ -52,8 +52,7 @@
                                         <span class="error">{{ $errors->first('password') }}</span>
                                     @endif
                                     <div class="form-check form-switch">
-                                        <input required class="form-check-input" type="checkbox" id="rememberMe"
-                                            checked="">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
                                         <label class="form-check-label" for="rememberMe">Remember me</label>
                                     </div>
 

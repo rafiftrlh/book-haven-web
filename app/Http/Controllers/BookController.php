@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class BookController extends Controller
 {
@@ -59,48 +60,59 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'book_code' => ['required', 'string', 'max:10', 'unique:books,book_code'],
-            'title_book' => ['required', 'string', 'max:50'],
-            'synopsis' => ['required', 'string'],
-            'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'language' => ['required', 'string', 'max:10'],
-            'categories' => ['required', 'exists:categories,id'],
-            'authors' => ['required', 'exists:authors,id'],
-            'stock' => ['integer', 'nullable'],
-        ]);
+        try {
+            $request->validate([
+                'book_code' => ['required', 'string', 'max:10'],
+                'title_book' => ['required', 'string', 'max:50'],
+                'synopsis' => ['required', 'string'],
+                'cover' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                'language' => ['required', 'string', 'max:10'],
+                'categories' => ['required', 'exists:categories,id'],
+                'categories.*' => ['exists:categories,id'],
+                'authors' => ['required', 'exists:authors,id'],
+                'authors.*' => ['exists:authors,id'],
+                'stock' => ['integer', 'nullable'],
+            ]);
 
-        $book = new Book();
-        $book->book_code = strtolower($validated['book_code']);
-        $book->title_book = strtolower($validated['title_book']);
-        $book->synopsis = $validated['synopsis'];
-        $book->language = strtolower($validated['language']);
-        $book->stock = $validated['stock'];
+            $book = new Book();
+            $book->book_code = strtolower($request->book_code);
+            $book->title_book = strtolower($request->title_book);
+            $book->synopsis = $request->synopsis;
+            $book->language = strtolower($request->language);
+            $book->stock = $request->stock;
 
-        if ($request->hasFile('cover')) {
-            $coverPath = $this->uploadCover($request->file('cover'));
-            $book->cover = $coverPath;
+            if ($request->hasFile('cover')) {
+                $coverPath = $this->uploadCover($request->file('cover'));
+                $book->cover = $coverPath;
+            }
+
+            $book->save();
+
+            // Attach category
+            foreach ($request->categories as $c) {
+                # code...
+                $book->categories()->attach($c);
+            }
+
+            // Attach authors
+            foreach ($request->authors as $a) {
+                $book->authors()->attach($a);
+            }
+
+            // Load relationships for response
+            $book->load('categories', 'authors');
+
+            return redirect(route('admin.books'));
+
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while creating the book. Please try again.')->withInput();
         }
 
-        $book->save();
-
-        // Attach category
-        foreach (explode(",", $validated['categories']) as $v) {
-            # code...
-            $book->categories()->attach($v);
-        }
-
-        // Attach authors
-        foreach (explode(",", $validated['authors']) as $v) {
-            $book->authors()->attach($v);
-        }
-
-        // Load relationships for response
-        $book->load('categories', 'authors');
-
-        return response()->json(['message' => 'Book created successfully', 'book' => $book], 201);
     }
 
     private function uploadCover($cover)
@@ -122,42 +134,55 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi data yang diterima dari formulir
-        $validator = Validator::make($request->all(), [
-            'title_book' => 'required|max:100',
-            'synopsis' => 'required|string',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'language' => 'required|string|max:10',
-            'stock' => 'required|integer|min:0',
-        ]);
+        try {
+            $request->validate([
+                'book_code' => ['nullable', 'string', 'max:10'],
+                'title_book' => ['nullable', 'string', 'max:50'],
+                'synopsis' => ['nullable', 'string'],
+                'cover' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                'language' => ['nullable', 'string', 'max:10'],
+                'categories' => ['nullable', 'exists:categories,id'],
+                'categories.*' => ['exists:categories,id'],
+                'authors' => ['nullable', 'exists:authors,id'],
+                'authors.*' => ['exists:authors,id'],
+                'stock' => ['nullable', 'integer', 'nullable'],
+            ]);
 
-        // Jika validasi gagal, kembalikan respons dengan pesan kesalahan
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
+            $book = Book::findOrFail($id);
+            $book->book_code = strtolower($request->book_code);
+            $book->title_book = strtolower($request->title_book);
+            $book->synopsis = $request->synopsis;
+            $book->language = strtolower($request->language);
+            $book->stock = $request->stock;
+
+            if ($request->hasFile('cover')) {
+                // Hapus cover lama jika ada
+                if ($book->cover) {
+                    Storage::delete($book->cover);
+                }
+                // Upload cover baru
+                $coverPath = $this->uploadCover($request->file('cover'));
+                $book->cover = $coverPath;
+            }
+
+            $book->save();
+
+            // Sync categories
+            $book->categories()->sync($request->categories);
+
+            // Sync authors
+            $book->authors()->sync($request->authors);
+
+            // Load relationships for response
+            $book->load('categories', 'authors');
+
+            return redirect(route('admin.books'))->with('success', 'Book updated successfully.');
+
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while updating the book. Please try again.')->withInput();
         }
-
-        // Ambil buku berdasarkan ID
-        $book = Book::findOrFail($id);
-
-        // Perbarui atribut-atribut buku sesuai data yang diterima
-        $book->title_book = $request->title_book;
-        $book->language = $request->language;
-        $book->synopsis = $request->synopsis;
-        $book->stock = $request->stock;
-
-        // Jika terdapat file gambar yang diunggah, proses penyimpanannya
-        if ($request->hasFile('cover')) {
-            $coverPath = $this->uploadCover($request->file('cover'));
-            $book->cover = $coverPath;
-        }
-
-        // Simpan perubahan buku
-        $book->save();
-        // Alert::success('Success', 'Buku Behasil di Edit!');
-
-        // Jika berhasil, kembalikan respons sukses
-        // return response()->json(['message' => 'Book updated successfully'], 200);
-        return back();
     }
 
     /**
@@ -181,12 +206,9 @@ class BookController extends Controller
 
             // Menghapus buku
             $book->delete();
-            Log::info('Book deleted successfully:', ['book_id' => $id]);
-
-            return response()->json(['message' => 'Book deleted successfully'], 200);
+            return back();
         } catch (Exception $e) {
-            Log::error('Error deleting book:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return response()->json(['message' => 'Failed to delete book', 'error' => $e->getMessage()], 500);
+            return back()->with(['message' => 'Failed to delete book']);
         }
     }
 }

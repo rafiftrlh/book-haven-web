@@ -74,7 +74,6 @@
                         <button type="submit" class="btn bg-gradient-primary">Create User</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
