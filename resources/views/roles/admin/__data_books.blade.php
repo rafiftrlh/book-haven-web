@@ -1,10 +1,9 @@
 <div class="container-fluid p-4">
     <div class="row">
         <div class="col-12">
-            <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#createBook">
+            <a href="{{ route('admin.books.create') }}" type="button" class="btn bg-gradient-primary">
                 Create Book
-            </button>
-            @include('partials.modals.admin.book.__create_book')
+            </a>
             <br>
             <div class="mt-4">
                 <input type="text" id="search" class="form-control" placeholder="Search book...">
@@ -42,7 +41,8 @@
                                 @foreach ($books as $book)
                                     <tr>
                                         <td>
-                                            <p class="text-xs text-secondary mb-0 px-3">{{ $book->book_code }}</p>
+                                            <p class="text-xs text-secondary mb-0 px-3"
+                                                style="text-transform: uppercase;">{{ $book->book_code }}</p>
                                         </td>
                                         <td>
                                             <p class="text-xs text-secondary mb-0 px-3"
@@ -85,7 +85,7 @@
                                             <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal"
                                                 data-bs-target="#editBook_{{ $book->id }}"
                                                 data-book-id="{{ $book->id }}">Edit</button>
-                                            {{-- @include('partials.modals.admin.author.__edit_author') --}}
+                                            @include('partials.modals.admin.book.__edit_book')
                                             <form action="{{ route('books.destroy', $book->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this book?');">
                                                 @csrf

@@ -14,6 +14,8 @@
         @include('roles.admin.__data_users')
     @elseif (request()->is('admin/books'))
         @include('roles.admin.__data_books')
+    @elseif (request()->is('admin/books-create'))
+        @include('roles.admin.inner_page.__create_book_page')
     @elseif (request()->is('admin/categories'))
         @include('roles.admin.__data_categories')
     @elseif (request()->is('admin/authors'))

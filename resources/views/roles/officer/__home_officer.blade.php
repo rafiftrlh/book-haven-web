@@ -5,7 +5,7 @@
     <!-- Or for RTL support -->
     {{-- <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" /> --}}
-      
+
     <form class="ms-2 px-3" id="bookForm">
         <div class="form-group">
             <div class="mb-4">
@@ -19,13 +19,13 @@
             </div>
             <div class="mb-4">
                 <label for="exampleFormControlInput1">Title Book</label>
-                <input type="Text" class="form-control" id="exampleFormControlInput1"  placeholder="Title Book"
+                <input type="Text" class="form-control" id="exampleFormControlInput1" placeholder="Title Book"
                     id="titleInput">
             </div>
             <div class="mb-4">
                 <label for="exampleFormControlInput1">Select Author</label>
-                <select class="form-select" id="multiple-select-field-authors" id="SelectAuthor" data-placeholder="Select Author"
-                    multiple>
+                <select class="form-select" id="multiple-select-field-authors" id="SelectAuthor"
+                    data-placeholder="Select Author" multiple>
                     <option>Christmas Island</option>
                     <option>South Sudan</option>
                     <option>Jamaica</option>
@@ -35,8 +35,8 @@
             </div>
             <div class="mb-4">
                 <label for="exampleFormControlInput1">Select Category</label>
-                <select class="form-select" id="multiple-select-field-categories" data-placeholder="Select Category" id="SelectCategory"
-                    multiple>
+                <select class="form-select" id="multiple-select-field-categories" data-placeholder="Select Category"
+                    id="SelectCategory" multiple>
                     <option>Christmas Island</option>
                     <option>South Sudan</option>
                     <option>Jamaica</option>
@@ -61,7 +61,7 @@
         <div class="card-header pb-0">
             <h6>Data User</h6>
         </div>
-        <div class=" px-0 pt-0 pb-2" >
+        <div class=" px-0 pt-0 pb-2">
             <div class="table-responsive p-0 ">
                 <table class="table align-items-center mb-0 ">
                     <thead>
@@ -89,7 +89,7 @@
                                 Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="user-table-body" >
+                    <tbody id="user-table-body">
                         @for ($i = 0; $i < 10; $i++)
                             <tr>
                                 <td>
@@ -107,13 +107,15 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <p class="text-xs text-secondary mb-0 px-3" style=" white-space: normal;
+                                    <p class="text-xs text-secondary mb-0 px-3"
+                                        style=" white-space: normal;
                                     word-wrap: break-word;">
                                         Romance, Lorem, Ipsum, Dolor, Amet
                                     </p>
                                 </td>
                                 <td>
-                                    <p class="text-xs text-secondary mb-0 px-3" style=" white-space: normal;
+                                    <p class="text-xs text-secondary mb-0 px-3"
+                                        style=" white-space: normal;
                                     word-wrap: break-word;">
                                         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consectetur natus
                                         eveniet officia. Maiores reprehenderit quam perspiciatis. Nemo eius quisquam
@@ -136,7 +138,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>  
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
@@ -149,6 +151,7 @@
             placeholder: $(this).data('placeholder'),
             closeOnSelect: false,
         });
+
         $('#multiple-select-field-authors').select2({
             theme: "bootstrap-5",
             width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
@@ -156,23 +159,22 @@
             closeOnSelect: false,
         });
 
-      
+
         document.getElementById('resetBtn').addEventListener('click', function() {
-        // Get the form element
-        var form = document.getElementById('bookForm');
+            // Get the form element
+            var form = document.getElementById('bookForm');
 
-        // Reset the form fields
-        form.reset();
+            // Reset the form fields
+            form.reset();
 
-        // Clear file input manually
-        var fileInput = document.getElementById('fileInput');
-        fileInput.value = '';
+            // Clear file input manually
+            var fileInput = document.getElementById('fileInput');
+            fileInput.value = '';
 
-        // Clear select inputs
-        var authorSelect = document.getElementById('SelectAuthor');
-        var categorySelect = document.getElementById('SelectCategory');
-        authorSelect.selectedIndex = -1;
-        categorySelect.selectedIndex = -1;
-    });
-
+            // Clear select inputs
+            var authorSelect = document.getElementById('SelectAuthor');
+            var categorySelect = document.getElementById('SelectCategory');
+            authorSelect.selectedIndex = -1;
+            categorySelect.selectedIndex = -1;
+        });
     </script>

@@ -86,6 +86,14 @@ class AdminController extends Controller
         return view('roles.admin.index', compact('books', 'categories', 'authors'));
     }
 
+    public function createBook()
+    {
+        $categories = Category::all();
+        $authors = Author::all();
+
+        return view('roles.admin.index', compact('categories', 'authors'));
+    }
+
     public function searchCategories(Request $request)
     {
         $query = $request->input('query');
