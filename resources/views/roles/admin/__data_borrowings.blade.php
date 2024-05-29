@@ -69,7 +69,7 @@
                                             d="{{ $reqApprove->id }}">Approve</button>
                                         @include('partials.modals.admin.borrowing.__approve_borrowing')
                                         <button type="button" class="btn btn-danger"
-                                            onclick="confirmDisapprove()">Disapprove</button>
+                                            onclick="confirmDisapprove({{ $reqApprove->id }})">Disapprove</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -188,7 +188,7 @@
 
                 // Make AJAX call to check for borrowing conditions and submit the form if conditions are met
                 $.ajax({
-                    url: "{{ route('borrows.approve', $reqApprove->id) }}",
+                    url: "api/borrowings/approve/" + borrowId,
                     type: 'PATCH',
                     data: {
                         _token: "{{ csrf_token() }}",
@@ -236,9 +236,9 @@
         });
     }
 
-    function disapproveBorrow() {
+    function disapproveBorrow(borrowId) {
         $.ajax({
-            url: "{{ route('borrows.disapprove', $reqApprove->id) }}",
+            url: "api/borrowings/disapprove/" + borrowId,
             type: 'PATCH',
             data: {
                 _token: "{{ csrf_token() }}",
