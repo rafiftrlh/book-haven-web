@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Models\Author;
@@ -44,3 +45,12 @@ Route::post('/authors/filterByDeletedStatus', [AuthorController::class, 'filterB
 Route::post('/authors/restoreAuthor/{id}', [AuthorController::class, 'restore'])->name('authors.restore');
 
 Route::resource('books', BookController::class);
+Route::post('books/checkStock', [BookController::class, 'checkStock'])->name('books.checkStock');
+
+Route::get('borrowings', [BorrowingController::class, 'index'])->name('borrows.index');
+Route::post('borrowings', [BorrowingController::class, 'store'])->name('borrows.store');
+Route::patch('borrowings/approve/{id}', [BorrowingController::class, 'approve'])->name('borrows.approve');
+Route::patch('borrowings/disapprove/{id}', [BorrowingController::class, 'disapprove'])->name('borrows.disapprove');
+Route::post('borrowings/return/{id}', [BorrowingController::class, 'returnBook'])->name('borrows.return');
+Route::post('borrowings/lost/{id}', [BorrowingController::class, 'lost'])->name('borrows.lost');
+Route::post('borrowings/broken/{id}', [BorrowingController::class, 'broken'])->name('borrows.broken');

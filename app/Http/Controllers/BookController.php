@@ -211,5 +211,13 @@ class BookController extends Controller
             return back()->with(['message' => 'Failed to delete book']);
         }
     }
+
+    public function checkStock(Request $request)
+    {
+        $bookId = $request->input('book_id');
+        $book = Book::findOrFail($bookId);
+
+        return response()->json(['stock' => $book->stock]);
+    }
 }
 

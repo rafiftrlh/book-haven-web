@@ -12,6 +12,8 @@
         @include('roles.admin.__home')
     @elseif (request()->is('admin/users'))
         @include('roles.admin.__data_users')
+    @elseif (request()->is('admin/borrowings'))
+        @include('roles.admin.__data_borrowings')
     @elseif (request()->is('admin/books'))
         @include('roles.admin.__data_books')
     @elseif (request()->is('admin/books-create'))

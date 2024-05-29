@@ -64,7 +64,7 @@
         </div>
         <div class="">
             <button type="reset" class="btn bg-gradient-danger" id="resetBtn">Reset</button>
-            <button type="submit" class="btn bg-gradient-primary">Create User</button>
+            <button type="submit" class="btn bg-gradient-primary">Create Book</button>
         </div>
     </form>
 </div>

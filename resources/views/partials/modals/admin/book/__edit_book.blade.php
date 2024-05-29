@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editBookLabel">Edit Book</h5>
-                <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2"
+                <button class="btn btn-link text-dark p-0" style="position: absolute; top:20px; right: 20px;"
                     data-bs-dismiss="modal">
                     <i class="fa fa-close" aria-hidden="true"></i>
                 </button>
@@ -33,8 +33,12 @@
 
                         <label for="cover" class="form-label">Cover</label>
                         <br>
-                        <img src="{{ $book->cover_url }}" class="rounded" alt="Cover Image"
-                            style="max-width: 100%; height: auto;">
+                        <div class="position-relative">
+                            <a class="d-block blur-shadow-image">
+                                <img src="{{ $book->cover_url }}" alt="img-blur-shadow" class="shadow border-radius-lg"
+                                    style="width: 100%;">
+                            </a>
+                        </div>
                         <div class="mt-3">
                             <input autocomplete="off" type="file"
                                 class="form-control @error('cover') is-invalid @enderror" id="cover" name="cover"

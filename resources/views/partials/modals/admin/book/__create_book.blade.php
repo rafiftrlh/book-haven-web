@@ -4,7 +4,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createBookLabel">Create Book</h5>
-                <button class="btn btn-link text-dark p-0 fixed-plugin-close-button" data-bs-dismiss="modal">
+                <button class="btn btn-link text-dark p-0" style="position: absolute; top:20px; right: 20px;"
+                    data-bs-dismiss="modal">
                     <i class="fa fa-close" aria-hidden="true"></i>
                 </button>
             </div>

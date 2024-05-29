@@ -19,14 +19,14 @@ class Borrowing extends Model
         'approved_by',
         'permission_date'
     ];
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function book()
+    public function books()
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Book::class, 'book_id');
     }
 
     public function conditionBooks()

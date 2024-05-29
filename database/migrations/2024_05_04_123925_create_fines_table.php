@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('fines', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('borrowing_id');
-            $table->enum('condition', ['rusak', 'hilang', 'telat mengembalikan']);
-            $table->string('type', 20);
+            $table->enum('condition', ['broken', 'lost', 'late return']);
+            $table->string('type', 20)->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
             $table->softDeletes();
