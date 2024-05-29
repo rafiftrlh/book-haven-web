@@ -51,6 +51,6 @@ Route::get('borrowings', [BorrowingController::class, 'index'])->name('borrows.i
 Route::post('borrowings', [BorrowingController::class, 'store'])->name('borrows.store');
 Route::patch('borrowings/approve/{id}', [BorrowingController::class, 'approve'])->name('borrows.approve');
 Route::patch('borrowings/disapprove/{id}', [BorrowingController::class, 'disapprove'])->name('borrows.disapprove');
-Route::post('borrowings/return/{id}', [BorrowingController::class, 'returnBook'])->name('borrows.return');
-Route::post('borrowings/lost/{id}', [BorrowingController::class, 'lost'])->name('borrows.lost');
-Route::post('borrowings/broken/{id}', [BorrowingController::class, 'broken'])->name('borrows.broken');
+Route::patch('borrowings/return/{id}', [BorrowingController::class, 'returnBook'])->name('borrows.return');
+Route::patch('borrowings/lost/{id}', [BorrowingController::class, 'lost'])->name('borrows.lost');
+Route::patch('borrowings/broken/{id}', [BorrowingController::class, 'broken'])->name('borrows.broken');

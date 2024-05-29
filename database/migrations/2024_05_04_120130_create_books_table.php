@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->text('synopsis');
             $table->string('language', 5);
             $table->integer('stock')->default(1);
+            $table->integer('price');
             $table->timestamps();
             $table->softDeletes();
         });

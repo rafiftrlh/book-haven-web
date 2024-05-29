@@ -75,6 +75,7 @@ class BookController extends Controller
                 'authors' => ['required', 'exists:authors,id'],
                 'authors.*' => ['exists:authors,id'],
                 'stock' => ['integer', 'nullable'],
+                'price' => ['integer'],
             ]);
 
             $book = new Book();
@@ -83,6 +84,7 @@ class BookController extends Controller
             $book->synopsis = $request->synopsis;
             $book->language = strtolower($request->language);
             $book->stock = $request->stock;
+            $book->price = $request->price;
 
             if ($request->hasFile('cover')) {
                 $coverPath = $this->uploadCover($request->file('cover'));
@@ -146,6 +148,7 @@ class BookController extends Controller
                 'authors' => ['nullable', 'exists:authors,id'],
                 'authors.*' => ['exists:authors,id'],
                 'stock' => ['nullable', 'integer', 'nullable'],
+                'price' => ['integer', 'nullable'],
             ]);
 
             $book = Book::findOrFail($id);
@@ -154,6 +157,7 @@ class BookController extends Controller
             $book->synopsis = $request->synopsis;
             $book->language = strtolower($request->language);
             $book->stock = $request->stock;
+            $book->price = $request->price;
 
             if ($request->hasFile('cover')) {
                 // Hapus cover lama jika ada

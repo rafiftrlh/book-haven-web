@@ -60,6 +60,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
         Route::get('admin/authors', [AdminController::class, 'authors'])->name('admin.authors');
         Route::get('admin/borrowings', [AdminController::class, 'borrowings'])->name('admin.borrowings');
+        Route::get('admin/req-approvals', [AdminController::class, 'reqApprovals'])->name('admin.req_approvals');
+        Route::get('admin/being-borrowings', [AdminController::class, 'beingBorrowings'])->name('admin.being_borrowings');
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {

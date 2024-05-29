@@ -92,18 +92,61 @@ class AdminController extends Controller
 
     public function borrowings()
     {
-        $reqApprovals = Borrowing::with('users', 'books')->where('status', 'awaiting approval')->limit(5)
-            ->orderBy('borrow_date', 'asc')->get();
+        $today = now()->toDateString();
 
-        $totalReq = $reqApprovals->count();
+        $reqApprovals = Borrowing::with('users', 'books')
+            ->where('status', 'awaiting approval')
+            ->limit(5)
+            ->orderBy('borrow_date', 'asc')
+            ->get();
 
-        $beingBorroweds = Borrowing::with('users', 'books')->where('status', 'borrowed')->limit(5)
-            ->orderBy('borrow_date', 'asc')->get();
+        $totalReq = Borrowing::where('status', 'awaiting approval')
+            ->count();
 
-        $totalBeingBorrowed = $beingBorroweds->count();
+        $beingBorrowings = Borrowing::with('users', 'books')
+            ->where('status', 'borrowed')
+            ->where('due_date', '>=', $today)
+            ->limit(5)
+            ->orderBy('due_date', 'asc')
+            ->get();
 
+        $totalBeingBorrowing = Borrowing::where('status', 'borrowed')
+            ->where('due_date', '>=', $today)
+            ->count();
 
-        return view('roles.admin.index', compact('reqApprovals', 'totalReq', 'beingBorroweds', 'totalBeingBorrowed'));
+        return view('roles.admin.index', compact('reqApprovals', 'totalReq', 'beingBorrowings', 'totalBeingBorrowing'));
+    }
+
+    public function beingBorrowings()
+    {
+        $today = now()->toDateString();
+
+        $beingBorrowings = Borrowing::with('users', 'books')
+            ->where('status', 'borrowed')
+            ->where('due_date', '>=', $today)
+            ->orderBy('borrow_date', 'asc')
+            ->get();
+
+        $totalBeingBorrowing = Borrowing::where('status', 'borrowed')
+            ->where('due_date', '>=', $today)
+            ->count();
+
+        return view('roles.admin.index', compact('beingBorrowings', 'totalBeingBorrowing'));
+    }
+
+    public function reqApprovals()
+    {
+        $today = now()->toDateString();
+
+        $reqApprovals = Borrowing::with('users', 'books')
+            ->where('status', 'awaiting approval')
+            ->orderBy('borrow_date', 'asc')
+            ->get();
+
+        $totalReq = Borrowing::where('status', 'awaiting approval')
+            ->count();
+
+        return view('roles.admin.index', compact('reqApprovals', 'totalReq'));
     }
 
     public function createBook()

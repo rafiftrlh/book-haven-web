@@ -43,6 +43,9 @@
                                             Stock</th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                            Unit Price</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
                                             Action</th>
                                     </tr>
                                 </thead>
@@ -59,6 +62,9 @@
                                             </td>
                                             <td>
                                                 <p class="text-xs text-secondary mb-0 px-3">{{ $book->stock }}</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs text-secondary mb-0 px-3">{{ $book->price }}</p>
                                             </td>
                                             <td class="d-flex gap-3 px-3">
                                                 <button type="button" class="btn bg-gradient-info"
