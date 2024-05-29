@@ -18,59 +18,76 @@
                 <input type="text" id="search" class="form-control" placeholder="Search categories...">
             </div>
             <div class="card mb-4 mt-4">
-                <div class="card-header pb-0">
+                <div class="card-header pb-0 d-flex gap-1">
                     <h6>Data Category</h6>
+                    <span class="text-primary"
+                        style="font-size: 14px; font-weight: 700; margin-right: 2px; margin-top: 2px;">
+                        @if ($totalCategory > 99)
+                            99+
+                        @else
+                            {{ $totalCategory }}
+                        @endif
+                    </span>
                 </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
-                            <thead>
-                                <tr>
-                                    <th
-                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
-                                        Id</th>
-                                    <th
-                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
-                                        Name</th>
-                                    <th
-                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
-                                        Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="category-table-body">
-                                @foreach ($categories as $category)
-                                    <tr>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0 px-3">{{ $category->id }}</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs text-secondary mb-0 px-3">{{ $category->name }}</p>
-                                        </td>
-                                        <td class="d-flex gap-3 px-3">
-                                            @if ($category->deleted_at)
-                                                <button type="button" class="btn btn-success"
-                                                    onclick="restoreCategory({{ $category->id }})">Restore</button>
-                                            @else
-                                                <button type="button" class="btn bg-gradient-info"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editCategory_{{ $category->id }}"
-                                                    data-book-id="{{ $category->id }}">Edit</button>
-                                                @include('partials.modals.admin.category.__edit_category')
-                                                <form action="{{ route('categories.destroy', $category->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Are you sure you want to delete this category?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                                </form>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                @if ($totalCategory == 0)
+                    <div class="card-body px-0 pt-0 pb-4">
+                        <p class="h4 text-secondary" style="text-align: center">
+                            No Category Data
+                        </p>
                     </div>
-                </div>
+                @else
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                            Id</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                            Name</th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                            Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="category-table-body">
+                                    @foreach ($categories as $category)
+                                        <tr>
+                                            <td>
+                                                <p class="text-xs text-secondary mb-0 px-3">{{ $category->id }}</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs text-secondary mb-0 px-3">{{ $category->name }}</p>
+                                            </td>
+                                            <td class="d-flex gap-3 px-3">
+                                                @if ($category->deleted_at)
+                                                    <button type="button" class="btn btn-success"
+                                                        onclick="restoreCategory({{ $category->id }})">Restore</button>
+                                                @else
+                                                    <button type="button" class="btn bg-gradient-info"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editCategory_{{ $category->id }}"
+                                                        data-book-id="{{ $category->id }}">Edit</button>
+                                                    @include('partials.modals.admin.category.__edit_category')
+                                                    <form action="{{ route('categories.destroy', $category->id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>

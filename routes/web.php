@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('admin/books-create', [AdminController::class, 'createBook'])->name('admin.books.create');
         Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
         Route::get('admin/authors', [AdminController::class, 'authors'])->name('admin.authors');
+        Route::get('admin/borrowings', [AdminController::class, 'borrowings'])->name('admin.borrowings');
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {
@@ -72,13 +74,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::view('notification', 'roles.customer.index')->name('customer.notification');
         Route::get('detailbuku', [UserController::class, 'Showdetailbuku'])->name('customer.detail');
 
-        Route::get(
-            'bookcatalog',
-            function () {
-                $categories = ["all", "fiction", "non fiction", "history", "arts", "science and technology"];
-                return view('roles.customer.index', compact("categories"));
-            }
-        )->name('customer.bookcatalog');
+        Route::get('book-catalog', [CustomerController::class, 'allBook'])->name('customer.bookcatalog');
 
     });
     // route untuk petugas

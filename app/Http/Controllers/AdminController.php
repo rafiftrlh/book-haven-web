@@ -26,7 +26,8 @@ class AdminController extends Controller
     public function users()
     {
         $users = User::all()->sortBy('role');
-        return view('roles.admin.index', compact('users'));
+        $totalUser = $users->count();
+        return view('roles.admin.index', compact('users', 'totalUser'));
     }
 
     public function filterByRole(Request $request)
@@ -57,15 +58,17 @@ class AdminController extends Controller
     public function categories()
     {
         $categories = Category::withTrashed()->orderBy('deleted_at')->get();
+        $totalCategory = $categories->count();
 
-        return view('roles.admin.index', compact('categories'));
+        return view('roles.admin.index', compact('categories', 'totalCategory'));
     }
 
     public function authors()
     {
         $authors = Author::withTrashed()->orderBy('deleted_at')->get();
+        $totalAuthor = $authors->count();
 
-        return view('roles.admin.index', compact('authors'));
+        return view('roles.admin.index', compact('authors', 'totalAuthor'));
     }
 
     public function books()
@@ -73,6 +76,7 @@ class AdminController extends Controller
         $books = Book::with('categories', 'authors')->get();
         $categories = Category::all();
         $authors = Author::all();
+        $totalBook = $books->count();
 
         $books->transform(function ($book) {
             if ($book->cover) {
@@ -83,7 +87,23 @@ class AdminController extends Controller
             return $book;
         });
 
-        return view('roles.admin.index', compact('books', 'categories', 'authors'));
+        return view('roles.admin.index', compact('books', 'categories', 'authors', 'totalBook'));
+    }
+
+    public function borrowings()
+    {
+        $reqApprovals = Borrowing::with('users', 'books')->where('status', 'awaiting approval')->limit(5)
+            ->orderBy('borrow_date', 'asc')->get();
+
+        $totalReq = $reqApprovals->count();
+
+        $beingBorroweds = Borrowing::with('users', 'books')->where('status', 'borrowed')->limit(5)
+            ->orderBy('borrow_date', 'asc')->get();
+
+        $totalBeingBorrowed = $beingBorroweds->count();
+
+
+        return view('roles.admin.index', compact('reqApprovals', 'totalReq', 'beingBorroweds', 'totalBeingBorrowed'));
     }
 
     public function createBook()

@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editAuthorLabel">Edit Author</h5>
-                <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2"
+                <button class="btn btn-link text-dark p-0" style="position: absolute; top:20px; right: 20px;"
                     data-bs-dismiss="modal">
                     <i class="fa fa-close" aria-hidden="true"></i>
                 </button>

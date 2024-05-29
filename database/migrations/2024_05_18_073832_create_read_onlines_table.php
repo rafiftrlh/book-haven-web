@@ -14,14 +14,16 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('book_id');
-            $table->enum('approval_status', ['Menunggu Persetujuan', 'Disetujui', 'Ditolak'])->default('Menunggu Persetujuan');
+            $table->enum('status', ['awaiting approval', 'approved', 'disapprove'])->default('awaiting approval');
             $table->dateTime('read_end_date')->nullable();
+            $table->unsignedBigInteger('changed_by');
             $table->timestamps();
             $table->softDeletes();
 
             // Definisikan relasi
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+            $table->foreign('changed_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
