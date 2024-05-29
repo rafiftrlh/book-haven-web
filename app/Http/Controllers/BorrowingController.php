@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Borrowing;
 use App\Models\Fine;
+use App\Models\UserReading;
 use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
@@ -15,7 +16,7 @@ class BorrowingController extends Controller
     public function index()
     {
         $borrowings = Borrowing::with(['user', 'book'])->get();
-        return response()->json($borrowings);
+        return $borrowings;
     }
 
     /**
@@ -44,22 +45,17 @@ class BorrowingController extends Controller
             ->where('status', 'awaiting approval')
             ->count();
 
-        if ($pendingBorrowings >= 2) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'You have pending borrow requests.'
-            ], 400);
-        }
-
-        // Cek jumlah buku yang sedang borrowed user dan belum returned
+        // Cek jumlah buku yang sedang dipinjam
         $activeBorrowings = Borrowing::where('user_id', $userId)
             ->where('status', 'borrowed')
             ->count();
 
-        if ($activeBorrowings >= 3) {
+        $pendingAndActiveBorrowings = $pendingBorrowings + $activeBorrowings;
+
+        if ($pendingAndActiveBorrowings >= 3) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'You have reached the maximum number of borrowed books.'
+                'message' => 'You have ' . $pendingBorrowings . ' pending borrow request and are borrowing ' . $activeBorrowings . ' books. The limit for borrowing or requesting approval is 3 times.'
             ], 400);
         }
 
@@ -139,20 +135,31 @@ class BorrowingController extends Controller
         $borrowing->return_date = now();
         $borrowing->save();
 
+        $user_reading = new UserReading();
+        $user_reading->user_id = $borrowing->user_id;
+        $user_reading->book_id = $borrowing->book_id;
+        $user_reading->save();
+
         return response()->json(['message' => 'Book returned successfully', 'borrowing' => $borrowing]);
     }
 
-
     public function broken($id)
     {
-        $borrowing = Borrowing::findOrFail($id);
+        $borrowing = Borrowing::with('books')->findOrFail($id);
         $borrowing->status = 'broken';
         $borrowing->return_date = now();
         $borrowing->save();
 
+        $user_reading = new UserReading();
+        $user_reading->user_id = $borrowing->user_id;
+        $user_reading->book_id = $borrowing->book_id;
+        $user_reading->save();
+
         $fine = new Fine();
         $fine->borrowing_id = $id;
         $fine->condition = 'broken';
+        $fine->type = 'pay half price';
+        $fine->price = $borrowing->books->price / 2;
         $fine->save();
 
         return response()->json(['message' => 'Book was returned but damaged', 'borrowing' => $borrowing]);
@@ -161,13 +168,16 @@ class BorrowingController extends Controller
     // Mark a borrowed book as lost
     public function lost($id)
     {
-        $borrowing = Borrowing::findOrFail($id);
-        $borrowing->status = 'lost';
+        $borrowing = Borrowing::with('books')->findOrFail($id);
+        $borrowing->status = 'broken';
+        $borrowing->return_date = now();
         $borrowing->save();
 
         $fine = new Fine();
         $fine->borrowing_id = $id;
-        $fine->condition = 'lost';
+        $fine->condition = 'broken';
+        $fine->type = 'pay full price';
+        $fine->price = $borrowing->books->price;
         $fine->save();
 
         return response()->json(['message' => 'Book marked as lost', 'borrowing' => $borrowing]);

@@ -54,7 +54,9 @@
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
-                    <button type="button" class="btn bg-gradient-primary"
+                    <button type="button"
+                        class="btn @if ($book->stock == 0) btn-secondary @else bg-gradient-primary @endif"
+                        @if ($book->stock == 0) @disabled(true) @endif
                         onclick="confirmBorrow({{ $book->id }})">Borrow</button>
                 </form>
                 <form action="" method="post">

@@ -47,6 +47,12 @@
             @error('stock')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+            <label for="price" class="form-label">Unit Price</label>
+            <input required autocomplete="off" type="number" class="form-control @error('price') is-invalid @enderror"
+                id="price" name="price" value="{{ old('price') }}">
+            @error('price')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
             <label for="categories" class="form-label">Categories</label>
             <select name="categories[]" id="categories" multiple>
                 @foreach ($categories as $c)
