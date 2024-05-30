@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('admin/borrowings', [AdminController::class, 'borrowings'])->name('admin.borrowings');
         Route::get('admin/req-approvals', [AdminController::class, 'reqApprovals'])->name('admin.req_approvals');
         Route::get('admin/being-borrowings', [AdminController::class, 'beingBorrowings'])->name('admin.being_borrowings');
+        Route::get('admin/late-returned', [AdminController::class, 'lateReturned'])->name('admin.late_returned');
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {

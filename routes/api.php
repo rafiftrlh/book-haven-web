@@ -54,3 +54,5 @@ Route::patch('borrowings/disapprove/{id}', [BorrowingController::class, 'disappr
 Route::patch('borrowings/return/{id}', [BorrowingController::class, 'returnBook'])->name('borrows.return');
 Route::patch('borrowings/lost/{id}', [BorrowingController::class, 'lost'])->name('borrows.lost');
 Route::patch('borrowings/broken/{id}', [BorrowingController::class, 'broken'])->name('borrows.broken');
+Route::patch('borrowings/late/{id}', [BorrowingController::class, 'late'])->name('borrows.late');
+Route::patch('borrowings/late-and-broken/{id}', [BorrowingController::class, 'lateAndBroken'])->name('borrows.lateAndBroken');

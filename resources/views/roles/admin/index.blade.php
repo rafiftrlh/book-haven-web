@@ -18,6 +18,8 @@
         @include('roles.admin.inner_page.__request_approval_page')
     @elseif (request()->is('admin/being-borrowings'))
         @include('roles.admin.inner_page.__being_borrowings_page')
+    @elseif (request()->is('admin/late-returned'))
+        @include('roles.admin.inner_page.__late_returned_page')
     @elseif (request()->is('admin/books'))
         @include('roles.admin.__data_books')
     @elseif (request()->is('admin/books-create'))
