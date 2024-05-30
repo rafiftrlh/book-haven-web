@@ -57,9 +57,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['cek_login:2']], function () {
         Route::get('officer', [OfficerController::class, 'index'])->name("officer.home");
-        Route::get('officer/add-category', [OfficerController::class, 'AddCategory'])->name('officer.add_category');
+        Route::get('officer/data_buku', [OfficerController::class, 'books'])->name('officer.data_buku');
+        Route::get('officer/add-category', [OfficerController::class, 'categories'])->name('officer.add_category');
         Route::get('officer/confirm_peminjaman', [OfficerController::class, 'peminjaman'])->name('officer.confirm_peminjaman');
-        Route::get('officer/add_author', [OfficerController::class, 'AddAuthor'])->name('officer.add_author');
+        Route::get('officer/add_author', [OfficerController::class, 'authors'])->name('officer.add_author');
+        Route::get('officer/books', [OfficerController::class, 'books'])->name('officer.books');
+        Route::get('officer/books_create', [OfficerController::class, 'createBook'])->name('officer.books_create');
     });
 
     Route::group(['middleware' => ['cek_login:3']], function () {
