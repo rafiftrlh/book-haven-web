@@ -233,7 +233,7 @@ class BorrowingController extends Controller
         $borrowing->save();
 
         // Hitung jumlah hari terlambat
-        $daysLate = $borrowing->return_date->diffInDays($borrowing->due_date, false);
+        $daysLate = Carbon::parse($borrowing->due_date)->diffInDays(Carbon::now(), false);
 
         // Hitung denda
         $price = max($daysLate * 10000, 0);
@@ -265,7 +265,7 @@ class BorrowingController extends Controller
         $borrowing->save();
 
         // Hitung jumlah hari terlambat
-        $daysLate = $borrowing->return_date->diffInDays($borrowing->due_date, false);
+        $daysLate = Carbon::parse($borrowing->due_date)->diffInDays(Carbon::now(), false);
 
         // Hitung denda keterlambatan
         $lateFine = max($daysLate * 10000, 0);

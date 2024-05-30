@@ -59,10 +59,20 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('admin/books-create', [AdminController::class, 'createBook'])->name('admin.books.create');
         Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
         Route::get('admin/authors', [AdminController::class, 'authors'])->name('admin.authors');
+
+        // Borrowings
         Route::get('admin/borrowings', [AdminController::class, 'borrowings'])->name('admin.borrowings');
         Route::get('admin/req-approvals', [AdminController::class, 'reqApprovals'])->name('admin.req_approvals');
         Route::get('admin/being-borrowings', [AdminController::class, 'beingBorrowings'])->name('admin.being_borrowings');
         Route::get('admin/late-returned', [AdminController::class, 'lateReturned'])->name('admin.late_returned');
+
+        // Fines
+        Route::get('admin/fines', [AdminController::class, 'fines'])->name('admin.fines');
+        Route::get('/admin/fines-late', [AdminController::class, 'allLateFines'])->name('admin.allLateFines');
+        Route::get('/admin/fines-broken', [AdminController::class, 'allBrokenFines'])->name('admin.allBrokenFines');
+        Route::get('/admin/fines-lost', [AdminController::class, 'allLostFines'])->name('admin.allLostFines');
+        Route::get('/admin/fines-late-and-broken', [AdminController::class, 'allLateAndBrokenFines'])->name('admin.allLateAndBrokenFines');
+
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {

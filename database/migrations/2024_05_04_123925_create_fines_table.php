@@ -14,11 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('borrowing_id');
             $table->enum('condition', ['broken', 'lost', 'late', 'late and broken']);
-            $table->string('type', 20)->nullable();
+            $table->string('type')->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
+            
             // Define foreign key constraints
             $table->foreign('borrowing_id')->references('id')->on('borrowings')->onDelete('cascade');
         });
