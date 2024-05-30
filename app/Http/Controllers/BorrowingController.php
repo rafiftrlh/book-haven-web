@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Borrowing;
 use App\Models\Fine;
+use App\Models\Notification;
 use App\Models\UserReading;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
@@ -92,20 +94,24 @@ class BorrowingController extends Controller
             ], 400);
         }
 
-        // Kurangi stok buku
-        $book->stock -= 1;
-        $book->save();
-
         // Update status peminjaman
         $borrowing->status = 'borrowed';
         $borrowing->changed_by = $request->changed_by;
         $borrowing->due_date = $request->due_date; // Menggunakan due_date dari request
         $borrowing->save();
 
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'The book with the title ' . $book->title_book . ' can be picked up at the library and the loan deadline is ' . $request->due_date;
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Retrieval of books that have been approved';
+        $notification->save();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Borrowing request has been approved.'
         ]);
+
     }
 
     public function disapprove(Request $request, $id)
@@ -120,6 +126,15 @@ class BorrowingController extends Controller
         $borrowing->status = 'disapprove';
         $borrowing->changed_by = $request->changed_by;
         $borrowing->save();
+
+        $book = Book::find($borrowing->book_id);
+
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'The book with the title ' . $book->title_book . ' is not approved.';
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Unapproved borrowing';
+        $notification->save();
 
         return response()->json([
             'status' => 'success',
@@ -139,6 +154,15 @@ class BorrowingController extends Controller
         $user_reading->user_id = $borrowing->user_id;
         $user_reading->book_id = $borrowing->book_id;
         $user_reading->save();
+
+        $book = Book::find($borrowing->book_id);
+
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'You have returned the book with the title ' . $book->title_book;
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Unapproved borrowing';
+        $notification->save();
 
         return response()->json(['message' => 'Book returned successfully', 'borrowing' => $borrowing]);
     }
@@ -162,6 +186,15 @@ class BorrowingController extends Controller
         $fine->price = $borrowing->books->price / 2;
         $fine->save();
 
+        $book = Book::find($borrowing->book_id);
+
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'You have returned a book with the title ' . $book->title_book . 'in damaged condition, you must pay a fine of' . ($borrowing->books->price / 2);
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Returning a book but in a damaged condition';
+        $notification->save();
+
         return response()->json(['message' => 'Book was returned but damaged', 'borrowing' => $borrowing]);
     }
 
@@ -169,18 +202,99 @@ class BorrowingController extends Controller
     public function lost($id)
     {
         $borrowing = Borrowing::with('books')->findOrFail($id);
-        $borrowing->status = 'broken';
+        $borrowing->status = 'lost';
         $borrowing->return_date = now();
         $borrowing->save();
 
         $fine = new Fine();
         $fine->borrowing_id = $id;
-        $fine->condition = 'broken';
+        $fine->condition = 'lost';
         $fine->type = 'pay full price';
         $fine->price = $borrowing->books->price;
         $fine->save();
 
+        $book = Book::find($borrowing->book_id);
+
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'You have lost a book with the title ' . $book->title_book . ', you must pay a fine of' . $borrowing->books->price;
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Omitting a book';
+        $notification->save();
+
         return response()->json(['message' => 'Book marked as lost', 'borrowing' => $borrowing]);
+    }
+
+    public function late($id)
+    {
+        $borrowing = Borrowing::with('books')->findOrFail($id);
+        $borrowing->status = 'late';
+        $borrowing->return_date = now();
+        $borrowing->save();
+
+        // Hitung jumlah hari terlambat
+        $daysLate = $borrowing->return_date->diffInDays($borrowing->due_date, false);
+
+        // Hitung denda
+        $price = max($daysLate * 10000, 0);
+
+        $fine = new Fine();
+        $fine->borrowing_id = $id;
+        $fine->condition = 'late';
+        $fine->type = 'pay late per day';
+        $fine->price = $price;
+        $fine->save();
+
+        $book = Book::find($borrowing->book_id);
+
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'You returned a book with the title ' . $book->title_book . ' late, you must pay a fine of' . $borrowing->books->price;
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Returned late';
+        $notification->save();
+
+        return response()->json(['message' => 'Book returned late', 'borrowing' => $borrowing]);
+    }
+
+    public function lateAndBroken($id)
+    {
+        $borrowing = Borrowing::with('books')->findOrFail($id);
+        $borrowing->status = 'late and broken';
+        $borrowing->return_date = now();
+        $borrowing->save();
+
+        // Hitung jumlah hari terlambat
+        $daysLate = $borrowing->return_date->diffInDays($borrowing->due_date, false);
+
+        // Hitung denda keterlambatan
+        $lateFine = max($daysLate * 10000, 0);
+
+        // Hitung denda buku rusak
+        $brokenFine = $borrowing->books->price / 2;
+
+        // Total denda
+        $totalFine = $lateFine + $brokenFine;
+
+        // Simpan informasi denda
+        $fine = new Fine();
+        $fine->borrowing_id = $id;
+        $fine->condition = 'late and broken';
+        $fine->type = 'fine late and damaged';
+        $fine->price = $totalFine;
+        $fine->save();
+
+        $book = Book::find($borrowing->book_id);
+
+        // Simpan notifikasi untuk pengguna
+        $notification = new Notification();
+        $notification->user_id = $borrowing->user_id;
+        $notification->message = 'You returned a book with the title ' . $book->title_book . ' late and in damaged condition. You must pay a fine of ' . $totalFine;
+        $notification->status = 'Unread';
+        $notification->notification_type = 'Returned late and damaged';
+        $notification->save();
+
+        return response()->json(['message' => 'Book returned late and damaged', 'borrowing' => $borrowing]);
     }
 
     /**

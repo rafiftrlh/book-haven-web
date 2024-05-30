@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->date('borrow_date')->default(now());
             $table->date('return_date')->nullable();
             $table->date('due_date')->nullable();
-            $table->enum('status', ['awaiting approval', 'approved', 'disapprove', 'borrowed', 'returned', 'broken', 'lost'])->default('awaiting approval');
+            $table->enum('status', ['awaiting approval', 'disapprove', 'borrowed', 'returned', 'broken', 'lost', 'late', 'late and broken'])->default('awaiting approval');
             $table->unsignedBigInteger('changed_by')->nullable();
             $table->date('permission_date')->nullable();
             $table->timestamps();

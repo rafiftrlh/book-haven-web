@@ -8,6 +8,7 @@ use App\Models\Borrowing;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\UserReading;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -94,15 +95,16 @@ class AdminController extends Controller
     {
         $today = now()->toDateString();
 
+        // Request approvals
         $reqApprovals = Borrowing::with('users', 'books')
             ->where('status', 'awaiting approval')
             ->limit(5)
             ->orderBy('borrow_date', 'asc')
             ->get();
 
-        $totalReq = Borrowing::where('status', 'awaiting approval')
-            ->count();
+        $totalReq = Borrowing::where('status', 'awaiting approval')->count();
 
+        // Being borrowings
         $beingBorrowings = Borrowing::with('users', 'books')
             ->where('status', 'borrowed')
             ->where('due_date', '>=', $today)
@@ -114,7 +116,36 @@ class AdminController extends Controller
             ->where('due_date', '>=', $today)
             ->count();
 
-        return view('roles.admin.index', compact('reqApprovals', 'totalReq', 'beingBorrowings', 'totalBeingBorrowing'));
+        // Late returneds
+        $lateReturneds = Borrowing::with('users', 'books')
+            ->where('status', 'borrowed')
+            ->where('due_date', '<', $today)
+            ->limit(5)
+            ->orderBy('due_date', 'asc')
+            ->get();
+
+        // Calculate fines for late returneds
+        foreach ($lateReturneds as $lateReturned) {
+            $daysLate = Carbon::parse($lateReturned->due_date)->diffInDays(Carbon::now(), false);
+            $lateFine = max($daysLate * 10000, 0); // Calculate late fine
+            $lateReturned->fine_price = $lateFine; // Add fine price to the borrowing data
+        }
+
+        $totalLateReturned = Borrowing::where('status', 'borrowed')
+            ->where('due_date', '<', $today)
+            ->count();
+
+        return view(
+            'roles.admin.index',
+            compact(
+                'reqApprovals',
+                'totalReq',
+                'beingBorrowings',
+                'totalBeingBorrowing',
+                'lateReturneds',
+                'totalLateReturned'
+            )
+        );
     }
 
     public function beingBorrowings()
@@ -132,6 +163,31 @@ class AdminController extends Controller
             ->count();
 
         return view('roles.admin.index', compact('beingBorrowings', 'totalBeingBorrowing'));
+    }
+
+    public function lateReturned()
+    {
+        $today = now()->toDateString();
+
+        $lateReturneds = Borrowing::with('users', 'books')
+            ->where('status', 'borrowed')
+            ->where('due_date', '<', $today)
+            ->limit(5)
+            ->orderBy('borrow_date', 'asc')
+            ->get();
+
+        // Loop through each borrowing to calculate the fine
+        foreach ($lateReturneds as $lateReturned) {
+            $daysLate = Carbon::parse($lateReturned->due_date)->diffInDays(Carbon::now(), false);
+            $lateFine = max($daysLate * 10000, 0); // Calculate late fine
+            $lateReturned->fine_price = $lateFine; // Add fine price to the borrowing data
+        }
+
+        $totalLateReturned = Borrowing::where('status', 'borrowed')
+            ->where('due_date', '<', $today)
+            ->count();
+
+        return view('roles.admin.index', compact('lateReturneds', 'totalLateReturned'));
     }
 
     public function reqApprovals()

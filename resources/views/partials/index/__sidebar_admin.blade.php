@@ -45,7 +45,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('admin/borrowings') || request()->is('admin/req-approvals') || request()->is('admin/being-borrowings') ? 'active' : '' }}"
+                <a class="nav-link {{ request()->is('admin/borrowings') || request()->is('admin/req-approvals') || request()->is('admin/being-borrowings') || request()->is('admin/late-returned') ? 'active' : '' }}"
                     href="{{ route('admin.borrowings') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">

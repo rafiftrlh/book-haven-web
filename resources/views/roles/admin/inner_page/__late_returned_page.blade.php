@@ -9,19 +9,19 @@
     </a>
     <div class="card mb-4 mt-4">
         <div class="card-header pb-0 d-flex gap-1">
-            <h6>Being Borrowed</h6>
+            <h6>Late Returned</h6>
             <span class="text-primary" style="font-size: 14px; font-weight: 700; margin-right: 2px; margin-top: 2px;">
-                @if ($totalBeingBorrowing > 99)
+                @if ($totalLateReturned > 99)
                     99+
                 @else
-                    {{ $totalBeingBorrowing }}
+                    {{ $totalLateReturned }}
                 @endif
             </span>
         </div>
-        @if ($totalBeingBorrowing == 0)
+        @if ($totalLateReturned == 0)
             <div class="card-body px-0 pt-0 pb-4">
                 <p class="h4 text-secondary" style="text-align: center">
-                    No Books Borrowed
+                    There were no borrowers who returned it late
                 </p>
             </div>
         @else
@@ -48,35 +48,43 @@
                                 </th>
                                 <th
                                     class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                    Fine Price
+                                </th>
+                                <th
+                                    class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
                                     Action
                                 </th>
                             </tr>
                         </thead>
                         <tbody id="req-approve-table-body">
-                            @foreach ($beingBorrowings as $beingBorrowing)
+                            @foreach ($lateReturneds as $lateReturned)
                                 <tr>
                                     <td>
                                         <p class="text-xs text-secondary mb-0 px-3" style="text-transform: uppercase;">
-                                            {{ $beingBorrowing->id }}</p>
+                                            {{ $lateReturned->id }}</p>
                                     </td>
                                     <td>
                                         <p class="text-xs text-secondary mb-0 px-3" style="text-transform: uppercase;">
-                                            {{ $beingBorrowing->books->book_code }}</p>
+                                            {{ $lateReturned->books->book_code }}</p>
                                     </td>
                                     <td>
                                         <p class="text-xs text-secondary mb-0 px-3">
-                                            &commat;{{ $beingBorrowing->users->username }}</p>
+                                            &commat;{{ $lateReturned->users->username }}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs text-secondary mb-0 px-3">{{ $beingBorrowing->due_date }}</p>
+                                        <p class="text-xs text-secondary mb-0 px-3">{{ $lateReturned->due_date }}</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs text-secondary mb-0 px-3">{{ $lateReturned->fine_price }}</p>
                                     </td>
                                     <td class="d-flex gap-3 px-3">
                                         <button type="button" class="btn bg-gradient-info"
-                                            onclick="confirmReturn({{ $beingBorrowing->id }})">Return</button>
+                                            onclick="confirmLate({{ $lateReturned->id }})">Late</button>
                                         <button type="button" class="btn bg-gradient-warning"
-                                            onclick="confirmBroken({{ $beingBorrowing->id }})">Broken</button>
+                                            onclick="confirmLateAndBroken({{ $lateReturned->id }})">Late and
+                                            Broken</button>
                                         <button type="button" class="btn bg-gradient-danger"
-                                            onclick="confirmLost({{ $beingBorrowing->id }})">Lost</button>
+                                            onclick="confirmLost({{ $lateReturned->id }})">Lost</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -89,18 +97,18 @@
 </div>
 
 <script>
-    function confirmReturn(borrowId) {
+    function confirmLate(borrowId) {
         // Show SweetAlert confirmation dialog
         Swal.fire({
-            title: 'Are you sure that he returned it in good condition?',
+            title: 'Are you sure he returned it late?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, he returned it!',
+            confirmButtonText: "Yes, she returned it late!",
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "/api/borrowings/return/" + borrowId,
+                    url: "/api/borrowings/late/" + borrowId,
                     type: 'PATCH',
                     data: {
                         _token: "{{ csrf_token() }}",
@@ -130,18 +138,18 @@
         });
     }
 
-    function confirmBroken(borrowId) {
+    function confirmLateAndBroken(borrowId) {
         // Show SweetAlert confirmation dialog
         Swal.fire({
-            title: 'Are you sure he returned it in damaged condition?',
+            title: 'Are you sure he returned it late and in a damaged condition?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: "Yes, it's broken!",
+            confirmButtonText: "Yes, she returned it late and in a damaged condition!",
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "/api/borrowings/broken/" + borrowId,
+                    url: "/api/borrowings/late-and-broken/" + borrowId,
                     type: 'PATCH',
                     data: {
                         _token: "{{ csrf_token() }}",
