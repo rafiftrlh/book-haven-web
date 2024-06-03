@@ -6,6 +6,7 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Borrowing;
 use App\Models\Category;
+use App\Models\Fine;
 use App\Models\User;
 use App\Models\UserReading;
 use Carbon\Carbon;
@@ -99,7 +100,6 @@ class AdminController extends Controller
         $reqApprovals = Borrowing::with('users', 'books')
             ->where('status', 'awaiting approval')
             ->limit(5)
-            ->orderBy('borrow_date', 'asc')
             ->get();
 
         $totalReq = Borrowing::where('status', 'awaiting approval')->count();
@@ -109,7 +109,6 @@ class AdminController extends Controller
             ->where('status', 'borrowed')
             ->where('due_date', '>=', $today)
             ->limit(5)
-            ->orderBy('due_date', 'asc')
             ->get();
 
         $totalBeingBorrowing = Borrowing::where('status', 'borrowed')
@@ -146,6 +145,90 @@ class AdminController extends Controller
                 'totalLateReturned'
             )
         );
+    }
+
+    public function fines()
+    {
+        // Mengambil data denda berdasarkan kategori late, broken, dan lost
+        $lateFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late')
+            ->limit(5)
+            ->get();
+
+        $brokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'broken')
+            ->limit(5)
+            ->get();
+
+        $lostFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'lost')
+            ->limit(5)
+            ->get();
+
+        $lateAndBrokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late and broken')
+            ->limit(5)
+            ->get();
+
+        // Menghitung total denda untuk setiap kategori
+        $totalLateFine = Fine::where('condition', 'late')->count();
+        $totalBrokenFine = Fine::where('condition', 'broken')->count();
+        $totalLostFine = Fine::where('condition', 'lost')->count();
+        $totalLateAndBrokenFine = Fine::where('condition', 'late and broken')->count();
+
+        return view('roles.admin.index', compact('lateFines', 'brokenFines', 'lostFines', 'lateAndBrokenFines', 'totalLateFine', 'totalBrokenFine', 'totalLostFine', 'totalLateAndBrokenFine'));
+    }
+
+    public function allLateFines()
+    {
+        // Mengambil semua data denda dengan kondisi 'late'
+        $lateFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalLateFine = Fine::where('condition', 'late')->count();
+
+
+        return view('roles.admin.index', compact('lateFines', 'totalLateFine'));
+    }
+
+    public function allBrokenFines()
+    {
+        // Mengambil semua data denda dengan kondisi 'broken'
+        $brokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'broken')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalBrokenFine = Fine::where('condition', 'broken')->count();
+
+        return view('roles.admin.index', compact('brokenFines', 'totalBrokenFine'));
+    }
+
+    public function allLostFines()
+    {
+        // Mengambil semua data denda dengan kondisi 'lost'
+        $lostFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'lost')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalLostFine = Fine::where('condition', 'lost')->count();
+
+        return view('roles.admin.index', compact('lostFines', 'totalLostFine'));
+    }
+
+    public function allLateAndBrokenFines()
+    {
+        $lateAndBrokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late and broken')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalLateAndBrokenFine = Fine::where('condition', 'late and broken')->count();
+
+        return view('roles.admin.index', compact('lateAndBrokenFines', 'totalLateAndBrokenFine'));
     }
 
     public function beingBorrowings()
