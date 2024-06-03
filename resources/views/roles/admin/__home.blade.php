@@ -95,4 +95,111 @@
             </div>
         </div>
     </div>
+    <div class="mt-3">
+        <a href="{{ route('admin.exportPdf') }}" class="btn bg-gradient-primary" target="_blank">Download Report</a>
+        <div class="card mb-4 mt-4">
+            <div class="card-header pb-0 d-flex gap-1">
+                <h6>Borrowing Data</h6>
+                <span class="text-primary"
+                    style="font-size: 14px; font-weight: 700; margin-right: 2px; margin-top: 2px;">
+                    @if ($borrowingCount > 99)
+                        99+
+                    @else
+                        {{ $borrowingCount }}
+                    @endif
+                </span>
+            </div>
+            @if ($borrowingCount == 0)
+                <div class="card-body px-0 pt-0 pb-4">
+                    <p class="h4 text-secondary" style="text-align: center">
+                        No Borrowing Data
+                    </p>
+                </div>
+            @else
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Id
+                                    </th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Book Code
+                                    </th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Username
+                                    </th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Borrow Date
+                                    </th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Status
+                                    </th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Fine
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="req-approve-table-body">
+                                @foreach ($borrowings as $borrowing)
+                                    <tr>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3"
+                                                style="text-transform: uppercase;">
+                                                {{ $borrowing->id }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3"
+                                                style="text-transform: uppercase;">
+                                                {{ $borrowing->books->book_code }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3">
+                                                &commat;{{ $borrowing->users->username }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3">{{ $borrowing->borrow_date }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3">{{ $borrowing->status }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3">
+                                                @if (in_array($borrowing->status, ['broken', 'lost', 'late', 'late and broken']))
+                                                    IDR. {{ $borrowing->fines->price ?? 'N/A' }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </p>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="5" class="total">
+                                        <p style="font-weight: 600" class="text-dark mb-0 px-3">
+                                            Total Fine
+                                        </p>
+                                    </td>
+                                    <td class="total">
+                                        <p style="font-weight: 600" class="text-dark mb-0 px-3">
+                                            IDR. {{ $totalFine }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
 </div>
