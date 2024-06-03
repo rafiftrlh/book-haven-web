@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Mpdf\Mpdf;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,9 +79,16 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['cek_login:2']], function () {
         Route::get('officer', [OfficerController::class, 'index'])->name("officer.home");
-        Route::get('officer/add-category', [OfficerController::class, 'AddCategory'])->name('officer.add_category');
-        Route::get('officer/confirm_peminjaman', [OfficerController::class, 'peminjaman'])->name('officer.confirm_peminjaman');
-        Route::get('officer/add_author', [OfficerController::class, 'AddAuthor'])->name('officer.add_author');
+        Route::get('officer/data_buku', [OfficerController::class, 'books'])->name('officer.data_buku');
+        Route::get('officer/add-category', [OfficerController::class, 'categories'])->name('officer.add_category');
+        Route::get('officer/confirm_peminjaman', [OfficerController::class, 'borrowings'])->name('officer.confirm_peminjaman');
+        Route::get('officer/add_author', [OfficerController::class, 'authors'])->name('officer.add_author');
+        Route::get('officer/books', [OfficerController::class, 'books'])->name('officer.books');
+        Route::get('officer/books_create', [OfficerController::class, 'createBook'])->name('officer.books_create');
+        Route::get('officer/req-approvals', [OfficerController::class, 'reqApprovals'])->name('officer.req_approvals');
+        Route::get('officer/being-borrowings', [OfficerController::class, 'beingBorrowings'])->name('officer.being_borrowings');
+        Route::get('officer/late-returned', [OfficerController::class, 'lateReturned'])->name('officer.late_returned');
+        Route::get('officer/view_pdf', [OfficerController::class, 'view_pdf'])->name('officer.print_pdf');
     });
 
     Route::group(['middleware' => ['cek_login:3']], function () {

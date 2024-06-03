@@ -1,5 +1,5 @@
 <div class="container-fluid p-4">
-    <a href="{{ route('admin.borrowings') }}" class="d-flex align-items-center gap-2 py-2 px-3 "
+    <a href="{{ route('officer.borrowings') }}" class="d-flex align-items-center gap-2 py-2 px-3 "
         style="width: fit-content; border: 1px solid gray; border-radius: 100px;">
         <svg style="rotate: -90deg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
