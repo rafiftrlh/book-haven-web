@@ -12,13 +12,13 @@ return new class extends Migration {
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
+            $table->string('book_code')->unique();
             $table->string('cover');
             $table->string('title_book');
             $table->text('synopsis');
             $table->string('language', 5);
-            $table->integer('stock');
-            $table->decimal('total_rating', 3, 2)->nullable();
-            $table->integer('total_readers')->nullable();
+            $table->integer('stock')->default(1);
+            $table->integer('price');
             $table->timestamps();
             $table->softDeletes();
         });

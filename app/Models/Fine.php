@@ -10,5 +10,10 @@ class Fine extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['borrowing_id', 'fine_amount', 'reason'];
+    protected $fillable = ['borrowing_id', 'condition', 'type', 'price'];
+
+    public function borrowing()
+    {
+        return $this->belongsTo(Borrowing::class);
+    }
 }

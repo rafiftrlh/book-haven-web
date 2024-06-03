@@ -21,5 +21,12 @@
         @include('roles.officer.__confirm_peminjaman')
     @elseif (request()->is('officer/add_author'))
         @include('roles.officer.__add_author')
+    @elseif (request()->is('officer/req-approvals'))
+        @include('roles.officer.__izin_peminjaman')
+    @elseif (request()->is('officer/being-borrowings'))
+        @include('roles.officer.__being_browing')
+     @elseif (request()->is('officer/late-returned'))
+        @include('roles.officer._late_returned')
     @endif
 @endsection
+

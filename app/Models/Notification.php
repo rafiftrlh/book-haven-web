@@ -11,4 +11,9 @@ class Notification extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['user_id', 'message', 'status', 'notification_type'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
