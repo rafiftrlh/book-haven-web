@@ -1,0 +1,10 @@
+.btnCategory {
+    background-color: green; /* Original background color */
+    color: white;
+}
+
+.btnCategory.active {
+    background-color: red; /* New background color */
+    color: white;
+}
+

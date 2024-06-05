@@ -6,6 +6,9 @@ use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Book;
+use App\Models\Category;
+
 
 use function Laravel\Prompts\error;
 
@@ -16,8 +19,31 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $books = Book::with('categories', 'authors')->get();
+        $categories = Category::all();
+        return view('books.index', compact('books', 'categories'));
     }
+
+    public function filterByCategory(Request $request)
+    {
+        $categoryId = $request->get('category_id');
+        $books = Book::whereHas('categories', function($query) use ($categoryId) {
+            $query->where('categories.id', $categoryId);
+        })->with('categories', 'authors')->get();
+
+        return response()->json(['books' => $books]);
+    }
+
+    public function searchBooks(Request $request)
+    {
+        $query = $request->input('query');
+        $books = Book::with('categories', 'authors')->where(function ($queryBuilder) use ($query) {
+            $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
+        })->get();
+
+        return response()->json($books);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -62,7 +88,7 @@ class UserController extends Controller
         }
     }
 
-
+    
 
     /**
      * Display the specified resource.

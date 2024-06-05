@@ -119,8 +119,6 @@
     }
 
     $(document).ready(function() {
-        $('#btn-all').addClass('btn-info');
-
         $('#search').on('keyup', function() {
             var query = $(this).val();
             $.ajax({

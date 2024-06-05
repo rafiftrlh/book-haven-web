@@ -94,9 +94,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['cek_login:3']], function () {
         Route::view('home', 'roles.customer.index')->name('customer.home');
         Route::view('notification', 'roles.customer.index')->name('customer.notification');
+        Route::get('/filter-books-by-category', [UserController::class, 'filterByCategory'])->name('filter.books.by.category');
+        Route::get('/user/search.books', [UserController::class, 'searchBooks'])->name('search.books');
         Route::get('detailbuku', [UserController::class, 'Showdetailbuku'])->name('customer.detail');
 
         Route::get('book-catalog', [CustomerController::class, 'allBook'])->name('customer.bookcatalog');
+     
+
 
     });
     // route untuk petugas
