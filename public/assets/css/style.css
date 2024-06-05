@@ -1,17 +1,1 @@
-.bgnotif {
-    height: 510px;
-    background-color: white;
-    overflow-y: auto;
-}
 
-/* Tambahkan di bagian CSS Anda */
-@media (max-width: 576px) {
-
-    .bgnotif{
-        margin-top: 70px;
-    }
-    .notif {
-        width: 80%; /* Sesuaikan lebar sesuai keinginan Anda */
-        margin-right: 15px; /* Tambahkan margin atas dan bawah */
-    }
-}

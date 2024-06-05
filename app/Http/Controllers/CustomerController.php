@@ -11,7 +11,7 @@ class CustomerController extends Controller
 {
     public function allBook()
     {
-        $books = Book::with('categories', 'authors')->get();
+        $books = Book::with('categories', 'authors', 'reviews')->get();
         $categories = Category::all();
 
         $books->transform(function ($book) {
@@ -22,6 +22,10 @@ class CustomerController extends Controller
             }
             $book->authors_list = $book->authors->pluck('name')->implode(', ');
             $book->categories_list = $book->categories->pluck('name')->implode(', ');
+
+            // Hitung total rating
+            $totalRating = $book->reviews->avg('rating');
+            $book->total_rating = round($totalRating, 1);
 
             return $book;
         });
