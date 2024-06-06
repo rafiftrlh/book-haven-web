@@ -3,10 +3,14 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Route;
 use Mpdf\Mpdf;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -74,7 +78,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/admin/fines-broken', [AdminController::class, 'allBrokenFines'])->name('admin.allBrokenFines');
         Route::get('/admin/fines-lost', [AdminController::class, 'allLostFines'])->name('admin.allLostFines');
         Route::get('/admin/fines-late-and-broken', [AdminController::class, 'allLateAndBrokenFines'])->name('admin.allLateAndBrokenFines');
-
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {
@@ -97,6 +100,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('detailbuku', [UserController::class, 'Showdetailbuku'])->name('customer.detail');
 
         Route::get('book-catalog', [CustomerController::class, 'allBook'])->name('customer.bookcatalog');
+        Route::get('/profile', [ProfileController::class, 'index'])->name('customer.profile');
+        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/borrowed-books', [ProfileController::class, 'showBorrowedBooksPage'])->name('borrowed_books_page');
+        Route::get('/borrowing-history', 'ProfileController@borrowingHistory')->name('borrowing_history');
+        Route::get('/borrowing-history', [ProfileController::class, 'index'])->name('borrowing_history');
+        Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notification')->middleware('auth');
+        Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+        Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
     });
     // route untuk petugas

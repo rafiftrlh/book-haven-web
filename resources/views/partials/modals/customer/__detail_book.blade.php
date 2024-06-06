@@ -28,8 +28,7 @@
                             @endforeach
                         </p>
                         <p style="text-transform: uppercase; font-size: 12px; font-weight: 600" class="mb-1 text-muted">
-                            {{ $book->language }} |
-                            &starf; 4.6</p>
+                            {{ $book->language }} | &starf; {{ $book->total_rating }}</p>
                         <div class="p-md-0 pt-3">
                             <h5 class="font-weight-bolder mb-0" style="text-transform: capitalize">
                                 {{ $book->title_book }}</h5>
@@ -45,6 +44,31 @@
 
                         <p class="mb-1 h6">Synopsis: </p>
                         <p class="mb-4">{{ $book->synopsis }}</p>
+
+                        <div class="border-top pt-2">
+                            <p class="mb-1 h6">Ulasan: </p>
+                            <div class="reviews-container" style="max-height: 300px; overflow-y: auto;">
+                                <ul class="list-unstyled">
+                                    @forelse ($book->reviews as $r)
+                                        <li class="border mb-3 p-2 rounded">
+                                            <span class="text-bold">{{ $r->user->username }} : </span>
+                                            {{ $r->review }}
+                                            <div class="rating">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $r->rating)
+                                                        <i class="fas fa-star"></i>
+                                                    @else
+                                                        <i class="far fa-star"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        </li>
+                                    @empty
+                                        <li class="text-muted">Belum ada ulasan untuk buku ini.</li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

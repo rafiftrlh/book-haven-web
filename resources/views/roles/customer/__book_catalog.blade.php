@@ -2,6 +2,15 @@
 
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
+<style>
+    .book-cover-img {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        /* Atur tinggi maksimal sesuai kebutuhan */
+    }
+</style>
+
 <div class="container-fluid p-4">
     <p class="h5">Category list</p>
     <div style="overflow-x: auto; overflow-y: hidden; display: flex; gap: 5px;">
@@ -17,8 +26,8 @@
             <div class="card p-3" style="height: fit-content; width: 230px;">
                 <div class="position-relative">
                     <a class="d-block blur-shadow-image">
-                        <img src="{{ $book->cover_url }}" alt="img-blur-shadow" class="shadow border-radius-lg"
-                            style="width: 100%;">
+                        <img src="{{ $book->cover_url }}" alt="img-blur-shadow"
+                            class="shadow border-radius-lg book-cover-img" style="width: 100%;">
                     </a>
                 </div>
                 <div class="card-body px-0 pt-3 pb-0">
@@ -34,8 +43,7 @@
                         @endforeach
                     </p>
                     <p style="text-transform: uppercase; font-size: 12px; font-weight: 600" class="mb-1 text-muted">
-                        {{ $book->language }} | &starf; 4.6
-                    </p>
+                        {{ $book->language }} | &starf; {{ $book->total_rating }}</p>
                     <a style="text-transform: capitalize;">
                         <h5>{{ $book->title_book }}</h5>
                     </a>

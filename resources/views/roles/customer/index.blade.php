@@ -15,5 +15,12 @@
         @include('roles.customer.__book_catalog')
     @elseif (request()->is('notification'))
         @include('roles.customer.__notification')
+    @elseif (request()->is('profile'))
+        @include('roles.customer.__profile')
+    @elseif (request()->is('borrowed-books'))
+        @include('roles.customer.borrowed_books')
+
+    @elseif (request()->is('borrowing-history'))
+        @include('roles.customer.borrowing_history')
     @endif
 @endsection
