@@ -1,9 +1,9 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3"
     id="sidenav-main">
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="">
+        <a class="navbar-brand m-0"z href="{{ route('customer.profile') }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
                 style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                 <path
@@ -61,9 +61,48 @@
                                 d="M8.75 8.75h6.5a.75.75 0 0 0 0-1.5h-6.5a.75.75 0 0 0 0 1.5m0 3.5h6.5a.75.75 0 0 0 0-1.5h-6.5a.75.75 0 0 0 0 1.5" />
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">Notificationn</span>
+                    <div class="rounded-circle bg-primary" id="markNotif" hidden
+                        style="width: 10px; height: 10px; top: -25px; left: 150px; position:relative;"></div>
+                    <div>
+                        <span class="nav-link-text ">Notification</span>
+                    </div>
                 </a>
             </li>
         </ul>
     </div>
 </aside>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Ketika dokumen siap, jalankan fungsi untuk mengambil notifikasi pengguna
+        getAllNotifications();
+    });
+
+    function getAllNotifications() {
+        // Mengirim permintaan AJAX untuk mendapatkan semua notifikasi pengguna
+        $.ajax({
+            url: "/get-notifications",
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                // Menampilkan notifikasi ke dalam elemen HTML
+                displayNotifications(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+    function displayNotifications(notifications) {
+        if (notifications && notifications.length > 0) {
+            // Tampilkan notifikasi dan hilangkan atribut hidden
+            $("#markNotif").removeAttr('hidden');
+        } else {
+            // Sembunyikan notifikasi dengan menambahkan atribut hidden
+            $("#markNotif").attr('hidden', true);
+        }
+    }
+</script>

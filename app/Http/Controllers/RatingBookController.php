@@ -28,7 +28,23 @@ class RatingBookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'book_id' => 'required|exists:books,id',
+            'user_id' => 'required|exists:users,id',
+            'review' => 'required',
+            'rating' => 'required|numeric|min:1|max:5',
+        ]);
+
+        // Simpan ulasan dan peringkat ke database
+        $review = new RatingBook();
+        $review->book_id = $request->input('book_id');
+        $review->user_id = $request->input('user_id'); // Sesuaikan dengan sistem autentikasi Anda
+        $review->review = $request->input('review');
+        $review->rating = $request->input('rating');
+    $review->save();
+
+        // Redirect atau kirim respons sesuai kebutuhan aplikasi Anda
+        return redirect()->back()->with('success', 'Review submitted successfully.');
     }
 
     /**

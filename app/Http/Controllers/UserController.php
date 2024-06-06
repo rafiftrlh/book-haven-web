@@ -10,6 +10,7 @@ use App\Models\Book;
 use App\Models\Category;
 
 
+use Illuminate\Support\Facades\Storage;
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
@@ -27,9 +28,24 @@ class UserController extends Controller
     public function filterByCategory(Request $request)
     {
         $categoryId = $request->get('category_id');
-        $books = Book::whereHas('categories', function($query) use ($categoryId) {
+        $books = Book::whereHas('categories', function ($query) use ($categoryId) {
             $query->where('categories.id', $categoryId);
-        })->with('categories', 'authors')->get();
+        })->with('categories', 'authors', 'reviews')->get();
+
+        $books->transform(function ($book) {
+            if ($book->cover) {
+                $book->cover_url = Storage::url($book->cover);
+            } else {
+                $book->cover_url = null;
+            }
+            $book->authors_list = $book->authors->pluck('name')->implode(', ');
+            $book->categories_list = $book->categories->pluck('name')->implode(', ');
+
+            $totalRating = $book->reviews->avg('rating');
+            $book->total_rating = round($totalRating, 1);
+
+            return $book;
+        });
 
         return response()->json(['books' => $books]);
     }
@@ -41,9 +57,23 @@ class UserController extends Controller
             $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
         })->get();
 
+        $books->transform(function ($book) {
+            if ($book->cover) {
+                $book->cover_url = Storage::url($book->cover);
+            } else {
+                $book->cover_url = null;
+            }
+            $book->authors_list = $book->authors->pluck('name')->implode(', ');
+            $book->categories_list = $book->categories->pluck('name')->implode(', ');
+
+            $totalRating = $book->reviews->avg('rating');
+            $book->total_rating = round($totalRating, 1);
+
+            return $book;
+        });
+
         return response()->json($books);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -52,6 +82,7 @@ class UserController extends Controller
     {
         //
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -88,7 +119,7 @@ class UserController extends Controller
         }
     }
 
-    
+
 
     /**
      * Display the specified resource.
