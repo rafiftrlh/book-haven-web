@@ -40,7 +40,7 @@ class Borrowing extends Model
 
     public function fines()
     {
-        return $this->hasMany(Fine::class);
+        return $this->hasOne(Fine::class);
     }
 
 

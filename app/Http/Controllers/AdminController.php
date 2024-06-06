@@ -9,9 +9,9 @@ use App\Models\Category;
 use App\Models\Fine;
 use App\Models\User;
 use App\Models\UserReading;
+use \Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -22,7 +22,12 @@ class AdminController extends Controller
         $bookCount = Book::count();
         $borrowingCount = Borrowing::count();
         $countReading = UserReading::count();
-        return view('roles.admin.index', compact('userCount', 'bookCount', 'borrowingCount', 'countReading'));
+
+        $borrowings = Borrowing::all();
+
+        $totalFine = Fine::sum('price');
+
+        return view('roles.admin.index', compact('userCount', 'bookCount', 'borrowingCount', 'countReading', 'borrowings', 'totalFine'));
     }
 
     public function users()
@@ -323,9 +328,19 @@ class AdminController extends Controller
         $query = $request->input('query');
         $books = Book::with('categories', 'authors')->where(function ($queryBuilder) use ($query) {
             $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
-        })
-            ->get();
+        })->get();
 
         return response()->json($books);
+    }
+
+    public function exportPdf()
+    {
+        $reportBorrowings = Borrowing::with('users', 'books', 'fines')
+            ->whereNotIn('status', ['awaiting approval', 'borrowed'])->get();
+
+        $totalFine = Fine::sum('price');
+
+        $pdf = Pdf::loadView('roles.admin.export_pdf.report_borrowing', compact('reportBorrowings', 'totalFine'));
+        return $pdf->stream('borrowing_data.pdf');
     }
 }

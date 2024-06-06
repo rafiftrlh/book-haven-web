@@ -114,7 +114,6 @@ class BookController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while creating the book. Please try again.')->withInput();
         }
-
     }
 
     private function uploadCover($cover)

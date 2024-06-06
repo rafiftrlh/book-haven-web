@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RatingBookController;
@@ -57,3 +58,6 @@ Route::patch('borrowings/late/{id}', [BorrowingController::class, 'late'])->name
 Route::patch('borrowings/late-and-broken/{id}', [BorrowingController::class, 'lateAndBroken'])->name('borrows.lateAndBroken');
 
 Route::post('rating', [RatingBookController::class, 'store'])->name('review.store');
+Route::post('/bookmark', [BookmarkController::class, 'storeOrDelete'])->name('bookmarks.storeOrDelete');
+Route::delete('/bookmark', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+
