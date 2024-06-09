@@ -330,7 +330,23 @@ class AdminController extends Controller
             $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
         })->get();
 
-        return response()->json($books);
+        $categories = Category::all();
+        $authors = Author::all();
+
+        $books->transform(function ($book) {
+            if ($book->cover) {
+                $book->cover_url = Storage::url($book->cover);
+            } else {
+                $book->cover_url = null;
+            }
+            return $book;
+        });
+
+        return response()->json([
+            'books' => $books,
+            'categories' => $categories,
+            'authors' => $authors
+        ]);
     }
 
     public function exportPdf()

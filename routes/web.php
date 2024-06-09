@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('admin/books-create', [AdminController::class, 'createBook'])->name('admin.books.create');
         Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
         Route::get('admin/authors', [AdminController::class, 'authors'])->name('admin.authors');
-        
+
         // Borrowings
         Route::get('admin/borrowings', [AdminController::class, 'borrowings'])->name('admin.borrowings');
         Route::get('admin/req-approvals', [AdminController::class, 'reqApprovals'])->name('admin.req_approvals');
@@ -95,8 +95,9 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['middleware' => ['cek_login:3']], function () {
-        Route::view('home', 'roles.customer.index')->name('customer.home');
+        Route::get('home', [CustomerController::class, 'index'])->name('customer.home');
         Route::view('notification', 'roles.customer.index')->name('customer.notification');
+        Route::get('/filter-books-by-category', [UserController::class, 'filterByCategory'])->name('filter.books.by.category');
         Route::get('detailbuku', [UserController::class, 'Showdetailbuku'])->name('customer.detail');
 
         Route::get('book-catalog', [CustomerController::class, 'allBook'])->name('customer.bookcatalog');
@@ -108,11 +109,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notification')->middleware('auth');
         Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
         Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-
+        Route::get('/get-notifications', [NotificationController::class, 'UnreadNotif'])->name('get.notifications');
     });
-    // route untuk petugas
-
-
 });
 
 

@@ -108,6 +108,7 @@ class AuthorController extends Controller
         }
     }
 
+    // Contoh controllernya
     public function filterByDeletedStatus(Request $request)
     {
         $status = $request->status;

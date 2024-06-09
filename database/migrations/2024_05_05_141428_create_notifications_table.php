@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->string('notification_type', 50);
             $table->timestamps();
             
-
             // Define foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

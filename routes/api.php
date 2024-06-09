@@ -6,6 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RatingBookController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,8 @@ Route::get('/admin/search-categories', [AdminController::class, 'searchCategorie
 Route::get('/admin/search-authors', [AdminController::class, 'searchAuthors'])->name('admin.searchAuthors');
 Route::get('/admin/search-books', [AdminController::class, 'searchBooks'])->name('admin.searchBooks');
 
+Route::get('/user/search-books', [UserController::class, 'searchBooks'])->name('customer.searchBooks');
+
 Route::resource('categories', CategoryController::class);
 Route::post('/categories/filterByDeletedStatus', [CategoryController::class, 'filterByDeletedStatus'])->name('categories.filterByDeletedStatus');
 Route::post('/categories/restoreCategory/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -60,4 +63,7 @@ Route::patch('borrowings/late-and-broken/{id}', [BorrowingController::class, 'la
 Route::post('rating', [RatingBookController::class, 'store'])->name('review.store');
 Route::post('/bookmark', [BookmarkController::class, 'storeOrDelete'])->name('bookmarks.storeOrDelete');
 Route::delete('/bookmark', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+
+// Contoh rute untuk mengambil notifikasi pengguna
+
 

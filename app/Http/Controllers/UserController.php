@@ -6,7 +6,11 @@ use App\Models\User;
 use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Book;
+use App\Models\Category;
 
+
+use Illuminate\Support\Facades\Storage;
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
@@ -16,7 +20,59 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $books = Book::with('categories', 'authors')->get();
+        $categories = Category::all();
+        return view('books.index', compact('books', 'categories'));
+    }
+
+    public function filterByCategory(Request $request)
+    {
+        $categoryId = $request->get('category_id');
+        $books = Book::whereHas('categories', function ($query) use ($categoryId) {
+            $query->where('categories.id', $categoryId);
+        })->with('categories', 'authors', 'reviews')->get();
+
+        $books->transform(function ($book) {
+            if ($book->cover) {
+                $book->cover_url = Storage::url($book->cover);
+            } else {
+                $book->cover_url = null;
+            }
+            $book->authors_list = $book->authors->pluck('name')->implode(', ');
+            $book->categories_list = $book->categories->pluck('name')->implode(', ');
+
+            $totalRating = $book->reviews->avg('rating');
+            $book->total_rating = round($totalRating, 1);
+
+            return $book;
+        });
+
+        return response()->json(['books' => $books]);
+    }
+
+    public function searchBooks(Request $request)
+    {
+        $query = $request->input('query');
+        $books = Book::with('categories', 'authors')->where(function ($queryBuilder) use ($query) {
+            $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
+        })->get();
+
+        $books->transform(function ($book) {
+            if ($book->cover) {
+                $book->cover_url = Storage::url($book->cover);
+            } else {
+                $book->cover_url = null;
+            }
+            $book->authors_list = $book->authors->pluck('name')->implode(', ');
+            $book->categories_list = $book->categories->pluck('name')->implode(', ');
+
+            $totalRating = $book->reviews->avg('rating');
+            $book->total_rating = round($totalRating, 1);
+
+            return $book;
+        });
+
+        return response()->json($books);
     }
 
     /**
@@ -26,7 +82,7 @@ class UserController extends Controller
     {
         //
     }
-    
+
 
     /**
      * Store a newly created resource in storage.

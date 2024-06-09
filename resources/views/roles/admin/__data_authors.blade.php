@@ -95,6 +95,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+    // Contoh filter author
     function filterAuthors(status) {
         $.ajax({
             url: '{{ route('authors.filterByDeletedStatus') }}',
