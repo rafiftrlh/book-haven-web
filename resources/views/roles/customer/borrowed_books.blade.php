@@ -5,18 +5,18 @@
                 <div class="card-header bg-primary text-white">Borrowed Books</div>
                 <div class="card-body">
                     <ul class="list-group">
-                        @foreach($borrowedBooks as $borrow)
+                        @foreach ($borrowedBooks as $borrow)
                             <li class="list-group-item d-flex align-items-center">
                                 <div>
                                     <strong>{{ $borrow->book->title_book }}</strong>
-                                    @if($borrow->due_date)
-                                        @if($borrow->due_date instanceof \Carbon\Carbon)
+                                    @if ($borrow->due_date)
+                                        @if ($borrow->due_date instanceof \Carbon\Carbon)
                                             (Due: {{ $borrow->due_date->format('d M Y') }})
                                         @else
                                             (Due: {{ \Carbon\Carbon::parse($borrow->due_date)->format('d M Y') }})
                                         @endif
                                     @else
-                                      <span class="ms-4">(Pending)</span>
+                                        <span class="ms-4">({{ $borrow->status }})</span>
                                     @endif
                                 </div>
                             </li>

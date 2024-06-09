@@ -24,6 +24,11 @@
                 <div class="card-body">
                     <ul class="list-group">
                         @foreach ($borrowingHistory as $borrow)
+                            @php
+                                $hasReviewed = $borrow->books->reviews
+                                    ->where('user_id', Auth::user()->id)
+                                    ->isNotEmpty();
+                            @endphp
                             <li class="list-group-item" data-toggle="modal" data-target="#reviewModal_{{ $borrow->id }}">
                                 @include('partials.modals.customer.__review_book')
                                 <strong>{{ $borrow->books->title_book }}</strong>
@@ -36,6 +41,14 @@
                                 @else
                                     (Not returned)
                                 @endif
+
+                                @if ($hasReviewed)
+                                    <button class="btn btn-secondary" disabled>You have already reviewed this
+                                        book</button>
+                                @else
+                                    <button class="btn btn-primary" data-toggle="modal"
+                                        data-target="#reviewModal_{{ $borrow->id }}">Write a Review</button>
+                                @endif
                             </li>
                         @endforeach
                     </ul>
@@ -44,4 +57,3 @@
         </div>
     </div>
 </div>
-
