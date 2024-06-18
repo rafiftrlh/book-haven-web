@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="card-footer pt-0">
-                <a href="{{ route('officer.req_approvals') }}"
+                <a href="{{ route('admin.req_approvals') }}"
                     class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
                     More
                     <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
@@ -159,9 +159,6 @@
                                         <button type="button" class="btn bg-gradient-danger"
                                             onclick="confirmLost({{ $beingBorrowing->id }})">Lost</button>
                                     </td>
-
-
-
                                 </tr>
                             @endforeach
                         </tbody>
@@ -169,7 +166,7 @@
                 </div>
             </div>
             <div class="card-footer pt-0">
-                <a href="{{ route('officer.being_borrowings') }}"
+                <a href="{{ route('admin.being_borrowings') }}"
                     class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
                     More
                     <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
@@ -265,7 +262,7 @@
                 </div>
             </div>
             <div class="card-footer pt-0">
-                <a href="{{ route('officer.late_returned') }}"
+                <a href="{{ route('admin.late_returned') }}"
                     class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
                     More
                     <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
@@ -274,9 +271,6 @@
         @endif
     </div>
 </div>
-
-  
- 
 
 <script>
     function confirmApprove(borrowId) {

@@ -89,25 +89,59 @@
     function updateBookTable(data) {
         var tableBody = $('#book-table-body');
         tableBody.empty();
-        data.forEach(function(book) {
-            var bookRow = `
-            <tr>
-                <td><p class="text-xs text-secondary mb-0 px-3">${book.book_code}</p></td>
-                <td><p class="text-xs text-secondary mb-0 px-3" style="text-transform: capitalize;">${book.title_book}</p></td>
-                <td><p class="text-xs text-secondary mb-0 px-3" style="text-transform: capitalize;">${book.stock}</p></td>
-                <td class="d-flex gap-3">
-                    <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editBook_${book.id}" data-book-id="${book.id}">Edit</button>
-                    <!-- Modal -->
-                    <form action="/api/books/${book.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
+
+        if (data.length === 0) {
+            var noResultRow = `
+                <tr>
+                    <td colspan="6"><p class="text-xl text-secondary mb-0 px-3 text-center">Data yang Anda cari tidak ditemukan.</p></td>
+                </tr>
             `;
-            tableBody.append(bookRow);
-        });
+            tableBody.append(noResultRow);
+        } else {
+            data.forEach(function(book) {
+                var bookRow = `
+                    <tr>
+                        <td><p class="text-xs text-secondary mb-0 px-3">${book.book_code}</p></td>
+                        <td><p class="text-xs text-secondary mb-0 px-3" style="text-transform: capitalize;">${book.title_book}</p></td>
+                        <td>
+                            <p class="text-xs text-secondary mb-0 px-3" style="text-transform: capitalize;">`;
+                            // Authors loop
+                            var totalAuthors = book.authors.length;
+                            book.authors.forEach(function(author, index) {
+                                bookRow += `${author.name}`;
+                                if (index + 1 < totalAuthors) {
+                                    bookRow += `, `;
+                                }
+                            });
+                            bookRow += `</p>
+                        </td>
+                        <td>
+                            <p class="text-xs text-secondary mb-0 px-3" style="text-transform: capitalize;">`;
+                            // Categories loop
+                            var totalCategories = book.categories.length;
+                            book.categories.forEach(function(category, index) {
+                                bookRow += `${category.name}`;
+                                if (index + 1 < totalCategories) {
+                                    bookRow += `, `;
+                                }
+                            });
+                            bookRow += `</p>
+                        </td>
+                        <td><p class="text-xs text-secondary mb-0 px-3">${book.stock}</p></td>
+                        <td class="d-flex gap-3">
+                            <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editBook_${book.id}" data-book-id="${book.id}">Edit</button>
+                            <!-- Modal -->
+                            <form action="/api/books/${book.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(bookRow);
+            });
+        }
     }
 
     $(document).ready(function() {
@@ -122,7 +156,7 @@
                     query: query
                 },
                 success: function(data) {
-                    updateBookTable(data);
+                    updateBookTable(data.books); // Assuming 'books' is the key containing books data
                 },
                 error: function(error) {
                     console.error(error);
@@ -131,3 +165,4 @@
         });
     });
 </script>
+

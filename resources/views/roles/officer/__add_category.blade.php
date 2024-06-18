@@ -39,6 +39,14 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tbody id="no-results-message" style="display:none;">
+                                <tr>
+                                    <td colspan="3">
+                                        <p class="text-center">data yang kamu cari tidak ada</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            
                         </table>
                     </div>
                 </div>
@@ -152,23 +160,32 @@
     }
 
     $(document).ready(function() {
-        $('#btn-all').addClass('btn-info');
+    $('#btn-all').addClass('btn-info');
 
-        $('#search').on('keyup', function() {
-            var query = $(this).val();
-            $.ajax({
-                url: '{{ route('admin.searchCategories') }}',
-                type: 'GET',
-                data: {
-                    query: query
-                },
-                success: function(data) {
+    $('#search').on('keyup', function() {
+        var query = $(this).val();
+        $.ajax({
+            url: '{{ route('admin.searchCategories') }}',
+            type: 'GET',
+            data: {
+                query: query
+            },
+            success: function(data) {
+                if (data.length === 0) {
+                    $('#category-table-body').empty(); // Kosongkan tabel jika data kosong
+                    $('#no-results-message').show(); // Tampilkan pesan "Data yang kamu cari tidak ada"
+                } else {
+                    $('#no-results-message').hide(); // Sembunyikan pesan jika ada hasil
                     updateCategoryTable(data);
-                },
-                error: function(error) {
-                    console.error(error);
                 }
-            });
+            },
+            error: function(error) {
+                console.error(error);
+            }
         });
     });
+});
+
+
+
 </script>

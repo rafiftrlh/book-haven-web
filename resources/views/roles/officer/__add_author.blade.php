@@ -7,9 +7,12 @@
             @include('partials.modals.admin.author.__create_author')
             <br>
             <div class="btn-group btn-group-status mt-4" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-secondary" id="btn-all" onclick="filterAuthors('all')">All</button>
-                <button type="button" class="btn btn-secondary" id="btn-active" onclick="filterAuthors('active')">Active</button>
-                <button type="button" class="btn btn-secondary" id="btn-deleted" onclick="filterAuthors('deleted')">Deleted</button>
+                <button type="button" class="btn btn-secondary" id="btn-all"
+                    onclick="filterAuthors('all')">All</button>
+                <button type="button" class="btn btn-secondary" id="btn-active"
+                    onclick="filterAuthors('active')">Active</button>
+                <button type="button" class="btn btn-secondary" id="btn-deleted"
+                    onclick="filterAuthors('deleted')">Deleted</button>
             </div>
             <div class="mt-4">
                 <input type="text" id="search" class="form-control" placeholder="Search authors...">
@@ -23,35 +26,54 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">Id</th>
-                                    <th class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">Name</th>
-                                    <th class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">Action</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Id</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Name</th>
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs align-middle font-weight-bolder opacity-7">
+                                        Action</th>
                                 </tr>
                             </thead>
                             <tbody id="author-table-body">
                                 @foreach ($authors as $author)
+                                    <tr>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3">{{ $author->id }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs text-secondary mb-0 px-3">{{ $author->name }}</p>
+                                        </td>
+                                        <td class="d-flex gap-3 px-3">
+                                            @if ($author->deleted_at)
+                                                <button type="button" class="btn btn-success"
+                                                    onclick="restoreAuthor({{ $author->id }})">Restore</button>
+                                            @else
+                                                <button type="button" class="btn bg-gradient-info"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editAuthor_{{ $author->id }}"
+                                                    data-book-id="{{ $author->id }}">Edit</button>
+                                                @include('partials.modals.admin.author.__edit_author')
+                                                <form action="{{ route('authors.destroy', $author->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this author?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tbody id="no-results-message" style="display:none;">
                                 <tr>
-                                    <td>
-                                        <p class="text-xs text-secondary mb-0 px-3">{{ $author->id }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-xs text-secondary mb-0 px-3">{{ $author->name }}</p>
-                                    </td>
-                                    <td class="d-flex gap-3 px-3">
-                                        @if ($author->deleted_at)
-                                        <button type="button" class="btn btn-success" onclick="restoreAuthor({{ $author->id }})">Restore</button>
-                                        @else
-                                        <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editAuthor_{{ $author->id }}" data-book-id="{{ $author->id }}">Edit</button>
-                                        @include('partials.modals.admin.author.__edit_author')
-                                        <form action="{{ route('authors.destroy', $author->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this author?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-                                        @endif
+                                    <td colspan="3">
+                                        <p class="text-center">data yang kamu cari tidak ada</p>
                                     </td>
                                 </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -60,6 +82,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -109,59 +132,65 @@
 
     function updateAuthorTable(data) {
         var tableBody = $('#author-table-body');
+        var noResultsMessage = $('#no-results-message');
         tableBody.empty();
-        data.forEach(function(author) {
-            var statusText = author.deleted_at ? 'Deleted' : 'Active';
-            var authorRow = `
-                <tr>
-                    <td><p class="text-xs text-secondary mb-0 px-3">${author.id}</p></td>
-                    <td><p class="text-xs text-secondary mb-0 px-3">${author.name}</p></td>
-                    <td class="d-flex gap-3">
-                        ${author.deleted_at ? `
-                        <button type="button" class="btn btn-success" onclick="restoreAuthor(${author.id})">Restore</button>
-                        ` : `
-                        <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editAuthor_${author.id}" data-book-id="${author.id}">Edit</button>
-                        <div class="modal fade" id="editAuthor_${author.id}" tabindex="-1" role="dialog" aria-labelledby="editAuthorLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered position-relative" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editAuthorLabel">Edit Author</h5>
-                                        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2" data-bs-dismiss="modal">
-                                            <i class="fa fa-close" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="/api/authors/${author.id}" method="POST">
-                                            @method('PATCH')
-                                            @csrf
-                                            <div class="modal-body container-fluid">
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">Author</label>
-                                                    <input required autocomplete="off" type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="${author.name}">
-                                                    @error('name')
+        if (data.length === 0) {
+            noResultsMessage.show();
+        } else {
+            noResultsMessage.hide();
+            data.forEach(function(author) {
+                var statusText = author.deleted_at ? 'Deleted' : 'Active';
+                var authorRow = `
+                    <tr>
+                        <td><p class="text-xs text-secondary mb-0 px-3">${author.id}</p></td>
+                        <td><p class="text-xs text-secondary mb-0 px-3">${author.name}</p></td>
+                        <td class="d-flex gap-3">
+                            ${author.deleted_at ? `
+                            <button type="button" class="btn btn-success" onclick="restoreAuthor(${author.id})">Restore</button>
+                            ` : `
+                            <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editAuthor_${author.id}" data-book-id="${author.id}">Edit</button>
+                            <div class="modal fade" id="editAuthor_${author.id}" tabindex="-1" role="dialog" aria-labelledby="editAuthorLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered position-relative" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editAuthorLabel">Edit Author</h5>
+                                            <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2" data-bs-dismiss="modal">
+                                                <i class="fa fa-close" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/api/authors/${author.id}" method="POST">
+                                                @method('PATCH')
+                                                @csrf
+                                                <div class="modal-body container-fluid">
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">Author</label>
+                                                        <input required autocomplete="off" type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="${author.name}">
+                                                        @error('name')
                                                         <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
+                                                        @enderror
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn bg-gradient-primary">Save changes</button>
-                                            </div>
-                                        </form>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn bg-gradient-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <form action="/api/authors/${author.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this author?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                        `}
-                    </td>
-                </tr>
-            `;
-            tableBody.append(authorRow);
-        });
+                            <form action="/api/authors/${author.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this author?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            `}
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(authorRow);
+            });
+        }
     }
 
     $(document).ready(function() {
@@ -179,7 +208,11 @@
                     updateAuthorTable(data);
                 },
                 error: function(error) {
-                    console.error(error);
+                    if (error.status === 404) {
+                        updateAuthorTable([]);
+                    } else {
+                        console.error(error);
+                    }
                 }
             });
         });
