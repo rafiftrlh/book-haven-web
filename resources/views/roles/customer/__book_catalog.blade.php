@@ -82,6 +82,13 @@
             </div>
         @endforeach
     </div>
+    <tbody id="no-results-message" style="display:none;">
+        <tr>
+            <td colspan="3">
+                <p class="text-center text-xl">Buku yang kamu cari tidak ada</p>
+            </td>
+        </tr>
+    </tbody>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -177,8 +184,8 @@
         var tableBody = $('#container-book');
         tableBody.empty();
         data.forEach(function(book) {
-            console.log(book.cover_url);
-            var bookRow = `
+                    console.log(book.cover_url);
+                    var bookRow = `
             <div class="card p-3" style="height: fit-content; width: 230px;">
                 <div class="position-relative">
                     <a class="d-block blur-shadow-image">
@@ -256,10 +263,11 @@
                                                                 <div class="rating">
                                                                     ${Array.from({ length: 5 }, (_, i) => `
                                                                         ${i < r.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>'}
-                                                                    `).join('')}
-                                                                </div>
-                                                            </li>
-                                                        `).join('') :
+                                                                    `).join('')
+            } <
+            /div> < /
+        li >
+            `).join('') :
                                                         '<li class="text-muted">Belum ada ulasan untuk buku ini.</li>'
                                                     }
                                                 </ul>
@@ -267,7 +275,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="modal-footer">
                                 <button type="button"
@@ -305,8 +312,8 @@
                 </div>
             </div>
           `;
-            tableBody.append(bookRow);
-        });
+        tableBody.append(bookRow);
+    });
     }
 
     $(document).ready(function() {
@@ -323,11 +330,17 @@
                     console.log(data);
                 },
                 error: function(error) {
-                    console.error(error);
+                    if (error.status === 404) {
+                        updateBookTable([]);
+                    } else {
+                        console.error(error);
+                    }
                 }
             });
         });
     });
+
+    
 
     $('.category-filter').click(function() {
         var categoryId = $(this).data('category-id');
