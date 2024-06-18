@@ -35,13 +35,22 @@ class RatingBookController extends Controller
             'rating' => 'required|numeric|min:1|max:5',
         ]);
 
+        // Cek apakah user sudah pernah mereview buku ini
+        $existingReview = RatingBook::where('book_id', $request->input('book_id'))
+            ->where('user_id', $request->input('user_id'))
+            ->first();
+
+        if ($existingReview) {
+            return redirect()->back()->with('error', 'You have already reviewed this book.');
+        }
+
         // Simpan ulasan dan peringkat ke database
         $review = new RatingBook();
         $review->book_id = $request->input('book_id');
-        $review->user_id = $request->input('user_id'); // Sesuaikan dengan sistem autentikasi Anda
+        $review->user_id = $request->input('user_id');
         $review->review = $request->input('review');
         $review->rating = $request->input('rating');
-    $review->save();
+        $review->save();
 
         // Redirect atau kirim respons sesuai kebutuhan aplikasi Anda
         return redirect()->back()->with('success', 'Review submitted successfully.');

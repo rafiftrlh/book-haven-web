@@ -19,8 +19,9 @@
         @include('roles.customer.__profile')
     @elseif (request()->is('borrowed-books'))
         @include('roles.customer.borrowed_books')
-
     @elseif (request()->is('borrowing-history'))
         @include('roles.customer.borrowing_history')
+    @elseif (request()->is('bookmarks'))
+        @include('roles.customer.__bookmarks')
     @endif
 @endsection

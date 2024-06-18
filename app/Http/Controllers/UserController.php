@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Book;
 use App\Models\Category;
-
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use function Laravel\Prompts\error;
 
@@ -32,6 +31,8 @@ class UserController extends Controller
             $query->where('categories.id', $categoryId);
         })->with('categories', 'authors', 'reviews')->get();
 
+        Log::info('Books fetched', ['books' => $books]);
+
         $books->transform(function ($book) {
             if ($book->cover) {
                 $book->cover_url = Storage::url($book->cover);
@@ -53,9 +54,11 @@ class UserController extends Controller
     public function searchBooks(Request $request)
     {
         $query = $request->input('query');
-        $books = Book::with('categories', 'authors')->where(function ($queryBuilder) use ($query) {
+        $books = Book::with('categories', 'authors', 'reviews')->where(function ($queryBuilder) use ($query) {
             $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
         })->get();
+
+        Log::info('Books fetched', ['books' => $books]);
 
         $books->transform(function ($book) {
             if ($book->cover) {

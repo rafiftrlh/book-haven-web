@@ -92,13 +92,15 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer pt-0">
-                <a href="{{ route('admin.allLateFines') }}"
-                    class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
-                    More
-                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                </a>
-            </div>
+            @if ($totalLateFine > 10)
+                <div class="card-footer pt-0">
+                    <a href="{{ route('admin.allLateFines') }}"
+                        class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
+                        More
+                        <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            @endif
         @endif
     </div>
 
@@ -196,13 +198,15 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer pt-0">
-                <a href="{{ route('admin.allBrokenFines') }}"
-                    class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
-                    More
-                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                </a>
-            </div>
+            @if ($totalBrokenFine > 10)
+                <div class="card-footer pt-0">
+                    <a href="{{ route('admin.allBrokenFines') }}"
+                        class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
+                        More
+                        <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            @endif
         @endif
     </div>
 
@@ -300,13 +304,15 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer pt-0">
-                <a href="{{ route('admin.allLostFines') }}"
-                    class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
-                    More
-                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                </a>
-            </div>
+            @if ($totalLostFine > 10)
+                <div class="card-footer pt-0">
+                    <a href="{{ route('admin.allLostFines') }}"
+                        class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
+                        More
+                        <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            @endif
         @endif
     </div>
 
@@ -406,13 +412,15 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer pt-0">
-                <a href="{{ route('admin.allLateAndBrokenFines') }}"
-                    class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
-                    More
-                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                </a>
-            </div>
+            @if ($totalLateAndBrokenFine > 10)
+                <div class="card-footer pt-0">
+                    <a href="{{ route('admin.allLateAndBrokenFines') }}"
+                        class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
+                        More
+                        <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            @endif
         @endif
     </div>
 </div>

@@ -58,4 +58,9 @@ class Book extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function bookmarkedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'bookmarks')->withTimestamps();
+    }
 }

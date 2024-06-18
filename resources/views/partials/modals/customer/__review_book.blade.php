@@ -1,45 +1,51 @@
 <div class="modal fade" id="reviewModal_{{ $borrow->id }}" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered position-relative" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('review.store') }}">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reviewModalLabel">Write a Review {{ $borrow->books->title_book }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
-                    <input type="hidden" name="book_id" id="book_id" value="{{ $borrow->book_id }}">
-                    <div class="form-group">
-                        <label for="review" class="col-form-label">Review:</label>
-                        <textarea class="form-control" id="review" name="review"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="rating" class="col-form-label">Rating:</label>
-                        <input type="hidden" id="rating" name="rating">
-                        <div id="rating-stars">
-                            <!-- Tambahkan elemen bintang rating di sini -->
-                            <i class="star fas fa-star" data-index="1"></i>
-                            <i class="star fas fa-star" data-index="2"></i>
-                            <i class="star fas fa-star" data-index="3"></i>
-                            <i class="star fas fa-star" data-index="4"></i>
-                            <i class="star fas fa-star" data-index="5"></i>
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailBookLabel"> Write a Review {{ $borrow->books->title_book }}
+                </h5>
+                <button class="btn btn-link text-dark p-0" style="position: absolute; top:20px; right: 20px;"
+                    data-bs-dismiss="modal">
+                    <i class="fa fa-close" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('review.store') }}">
+                    @csrf
+                    @if ($hasReviewed)
+                        <p>You have already reviewed this book.</p>
+                    @else
+                        <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="book_id" id="book_id" value="{{ $borrow->book_id }}">
+                        <div class="form-group">
+                            <label for="review" class="col-form-label">Review:</label>
+                            <textarea class="form-control" id="review" name="review"></textarea>
                         </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit Review</button>
-                </div>
-            </form>
+                        <div class="form-group">
+                            <label for="rating" class="col-form-label">Rating:</label>
+                            <input type="hidden" id="rating" name="rating">
+                            <div id="rating-stars">
+                                <!-- Tambahkan elemen bintang rating di sini -->
+                                <i class="star fas fa-star" data-index="1"></i>
+                                <i class="star fas fa-star" data-index="2"></i>
+                                <i class="star fas fa-star" data-index="3"></i>
+                                <i class="star fas fa-star" data-index="4"></i>
+                                <i class="star fas fa-star" data-index="5"></i>
+                            </div>
+                        </div>
+                    @endif
+                    @if (!$hasReviewed)
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </div>
+                    @endif
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
 
 <script>
     $(document).ready(function() {

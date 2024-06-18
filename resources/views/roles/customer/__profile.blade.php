@@ -31,8 +31,12 @@
                     <a href="{{ route('borrowed_books_page') }}" class="btn btn-primary w-100 text-start">Borrowed
                         Books</a>
 
-                 
-                    <a href="{{ route('borrowing_history') }}" class="btn btn-primary w-100 mt-3 text-start">Borrowing History</a>
+
+                    <a href="{{ route('borrowing_history') }}" class="btn btn-primary w-100 mt-3 text-start">Borrowing
+                        History</a>
+
+                    <a href="{{ route('customer.bookmarks') }}"
+                        class="btn btn-primary w-100 mt-3 text-start">Bookmarks</a>
 
                 </div>
             </div>

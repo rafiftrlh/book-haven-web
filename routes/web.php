@@ -116,10 +116,9 @@ Route::get('officer/monthly-borrowing-data', [OfficerController::class, 'monthly
 
         Route::get('book-catalog', [CustomerController::class, 'allBook'])->name('customer.bookcatalog');
         Route::get('/profile', [ProfileController::class, 'index'])->name('customer.profile');
-        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/borrowed-books', [ProfileController::class, 'showBorrowedBooksPage'])->name('borrowed_books_page');
-        Route::get('/borrowing-history', 'ProfileController@borrowingHistory')->name('borrowing_history');
-        Route::get('/borrowing-history', [ProfileController::class, 'index'])->name('borrowing_history');
+        Route::get('/borrowing-history', [ProfileController::class, 'showHistoryBorrowed'])->name('borrowing_history');
+        Route::get('/bookmarks', [ProfileController::class, 'showBookmarkedBooks'])->name('customer.bookmarks');
         Route::get('/notification', [NotificationController::class, 'index'])->name('customer.notification')->middleware('auth');
         Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
         Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');

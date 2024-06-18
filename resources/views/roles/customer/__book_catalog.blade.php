@@ -93,7 +93,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function confirmBorrow(bookId) {
+        function confirmBorrow(bookId) {
         Swal.fire({
             title: 'Are you sure you want to borrow this book?',
             icon: 'warning',
@@ -184,8 +184,7 @@
         var tableBody = $('#container-book');
         tableBody.empty();
         data.forEach(function(book) {
-                    console.log(book.cover_url);
-                    var bookRow = `
+            var bookRow = `
             <div class="card p-3" style="height: fit-content; width: 230px;">
                 <div class="position-relative">
                     <a class="d-block blur-shadow-image">
@@ -202,7 +201,7 @@
                         ${book.categories.map((c, index) => `${c.name}${index < book.categories.length - 1 ? ' • ' : ''}`).join('')}
                     </p>
                     <p style="text-transform: uppercase; font-size: 12px; font-weight: 600" class="mb-1 text-muted">
-                        ${book.language} | &starf; 4.6
+                        ${book.language} | &starf; ${book.total_rating}
                     </p>
                     <a style="text-transform: capitalize;">
                         <h5>${book.title_book}</h5>
@@ -258,7 +257,7 @@
                                                     ${book.reviews.length > 0 ?
                                                         book.reviews.map(r => `
                                                             <li class="border mb-3 p-2 rounded">
-                                                                <span class="text-bold">${r.user.username} : </span>
+                                                                <span class="text-bold">${r.user ? r.user.username : 'Anonymous'} : </span>
                                                                 ${r.review}
                                                                 <div class="rating">
                                                                     ${Array.from({ length: 5 }, (_, i) => `
