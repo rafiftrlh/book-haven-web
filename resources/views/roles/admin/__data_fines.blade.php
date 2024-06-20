@@ -92,7 +92,7 @@
                     </table>
                 </div>
             </div>
-            @if ($totalLateFine > 10)
+            @if ($totalLateFine > 5)
                 <div class="card-footer pt-0">
                     <a href="{{ route('admin.allLateFines') }}"
                         class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
@@ -198,7 +198,7 @@
                     </table>
                 </div>
             </div>
-            @if ($totalBrokenFine > 10)
+            @if ($totalBrokenFine > 5)
                 <div class="card-footer pt-0">
                     <a href="{{ route('admin.allBrokenFines') }}"
                         class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">
@@ -304,7 +304,7 @@
                     </table>
                 </div>
             </div>
-            @if ($totalLostFine > 10)
+            @if ($totalLostFine > 5)
                 <div class="card-footer pt-0">
                     <a href="{{ route('admin.allLostFines') }}"
                         class="ps-0 text-secondary icon-move-right pull-right fw-bold" style="font-size: 14px">

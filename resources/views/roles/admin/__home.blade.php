@@ -202,4 +202,56 @@
             @endif
         </div>
     </div>
+
+    <div class="mt-4">
+        <h6>Monthly Borrowing Data</h6>
+        <canvas id="monthlyBorrowingChart"></canvas>
+    </div>
 </div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/admin/monthly-borrowing-data')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('monthlyBorrowingChart').getContext('2d');
+
+                const months = data.map(entry => entry.month);
+                const counts = data.map(entry => entry.count);
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Number of Borrowers',
+                            data: counts,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Month'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Number of Borrowers'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    });
+</script>

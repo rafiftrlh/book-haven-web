@@ -12,6 +12,7 @@ use App\Models\UserReading;
 use \Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -28,6 +29,19 @@ class AdminController extends Controller
         $totalFine = Fine::sum('price');
 
         return view('roles.admin.index', compact('userCount', 'bookCount', 'borrowingCount', 'countReading', 'borrowings', 'totalFine'));
+    }
+
+    public function monthlyBorrowingData()
+    {
+        // Fetch borrowing data grouped by month
+        $borrowings = Borrowing::select(
+            DB::raw('COUNT(id) as count'),
+            DB::raw('MONTH(borrow_date) as month')
+        )
+            ->groupBy('month')
+            ->get();
+
+        return response()->json($borrowings);
     }
 
     public function users()
