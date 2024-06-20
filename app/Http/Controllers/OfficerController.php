@@ -1,19 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Borrowing;
 use App\Models\Category;
+use App\Models\Fine;
 use App\Models\User;
 use App\Models\UserReading;
+use \Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Stmt\Return_;
-use Mpdf\Mpdf;
+use DB;
+
 
 
 class OfficerController extends Controller
@@ -24,33 +24,12 @@ class OfficerController extends Controller
         $bookCount = Book::count();
         $borrowingCount = Borrowing::count();
         $countReading = UserReading::count();
-        return view('roles.officer.index', compact('userCount', 'bookCount', 'borrowingCount', 'countReading'));
-    }
 
+        $borrowings = Borrowing::all();
 
-    public function filterByRole(Request $request)
-    {
-        $role = $request->role;
-        if ($role == 0) {
-            $users = User::orderBy('role')->get();
-        } else {
-            $users = User::where('role', $role)
-                ->get();
-        }
-        return response()->json($users);
-    }
+        $totalFine = Fine::sum('price');
 
-    public function searchUsers(Request $request)
-    {
-        $query = $request->input('query');
-        $users = User::where(function ($queryBuilder) use ($query) {
-            $queryBuilder->where('username', 'LIKE', "%{$query}%")
-                ->orWhere('full_name', 'LIKE', "%{$query}%")
-                ->orWhere('email', 'LIKE', "%{$query}%");
-        })
-            ->get();
-
-        return response()->json($users);
+        return view('roles.officer.index', compact('userCount', 'bookCount', 'borrowingCount', 'countReading', 'borrowings', 'totalFine'));
     }
 
     public function categories()
@@ -96,7 +75,6 @@ class OfficerController extends Controller
         $reqApprovals = Borrowing::with('users', 'books')
             ->where('status', 'awaiting approval')
             ->limit(5)
-            ->orderBy('borrow_date', 'asc')
             ->get();
 
         $totalReq = Borrowing::where('status', 'awaiting approval')->count();
@@ -106,7 +84,6 @@ class OfficerController extends Controller
             ->where('status', 'borrowed')
             ->where('due_date', '>=', $today)
             ->limit(5)
-            ->orderBy('due_date', 'asc')
             ->get();
 
         $totalBeingBorrowing = Borrowing::where('status', 'borrowed')
@@ -145,11 +122,104 @@ class OfficerController extends Controller
         );
     }
 
-    public function view_pdf()
+
+    public function monthlyBorrowingData()
     {
-        $mpdf = new \mPDF();
-        $mpdf->WriteHTML('<h1>Hello world!</h1>');
-        $mpdf->Output();
+        // Fetch borrowing data grouped by month
+        $borrowings = Borrowing::select(
+            DB::raw('COUNT(id) as count'),
+            DB::raw('MONTH(borrow_date) as month')
+        )
+        ->groupBy('month')
+        ->get();
+
+        return response()->json($borrowings);
+    }
+
+    
+
+    public function fines()
+    {
+        // Mengambil data denda berdasarkan kategori late, broken, dan lost
+        $lateFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late')
+            ->limit(5)
+            ->get();
+
+        $brokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'broken')
+            ->limit(5)
+            ->get();
+
+        $lostFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'lost')
+            ->limit(5)
+            ->get();
+
+        $lateAndBrokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late and broken')
+            ->limit(5)
+            ->get();
+
+        // Menghitung total denda untuk setiap kategori
+        $totalLateFine = Fine::where('condition', 'late')->count();
+        $totalBrokenFine = Fine::where('condition', 'broken')->count();
+        $totalLostFine = Fine::where('condition', 'lost')->count();
+        $totalLateAndBrokenFine = Fine::where('condition', 'late and broken')->count();
+
+        return view('roles.officer.index', compact('lateFines', 'brokenFines', 'lostFines', 'lateAndBrokenFines', 'totalLateFine', 'totalBrokenFine', 'totalLostFine', 'totalLateAndBrokenFine'));
+    }
+
+    public function allLateFines()
+    {
+        // Mengambil semua data denda dengan kondisi 'late'
+        $lateFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalLateFine = Fine::where('condition', 'late')->count();
+
+
+        return view('roles.officer.index', compact('lateFines', 'totalLateFine'));
+    }
+
+    public function allBrokenFines()
+    {
+        // Mengambil semua data denda dengan kondisi 'broken'
+        $brokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'broken')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalBrokenFine = Fine::where('condition', 'broken')->count();
+
+        return view('roles.officer.index', compact('brokenFines', 'totalBrokenFine'));
+    }
+
+    public function allLostFines()
+    {
+        // Mengambil semua data denda dengan kondisi 'lost'
+        $lostFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'lost')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalLostFine = Fine::where('condition', 'lost')->count();
+
+        return view('roles.officer.index', compact('lostFines', 'totalLostFine'));
+    }
+
+    public function allLateAndBrokenFines()
+    {
+        $lateAndBrokenFines = Fine::with('borrowing.books', 'borrowing.users')
+            ->where('condition', 'late and broken')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalLateAndBrokenFine = Fine::where('condition', 'late and broken')->count();
+
+        return view('roles.officer.index', compact('lateAndBrokenFines', 'totalLateAndBrokenFine'));
     }
 
     public function beingBorrowings()
@@ -214,7 +284,7 @@ class OfficerController extends Controller
         $categories = Category::all();
         $authors = Author::all();
 
-        return view('roles.officer.index', compact('categories', 'authors'));
+        return view('roles.admin.index', compact('categories', 'authors'));
     }
 
     public function searchCategories(Request $request)
@@ -224,6 +294,9 @@ class OfficerController extends Controller
             $queryBuilder->where('name', 'LIKE', "%{$query}%");
         })
             ->get();
+            if ($categories->isEmpty()) {
+                return response()->json(['message' => 'Data yang kamu cari tidak ad'], 404);
+            }
 
         return response()->json($categories);
     }
@@ -236,6 +309,10 @@ class OfficerController extends Controller
         })
             ->get();
 
+            if ($authors->isEmpty()) {
+                return response()->json(['message' => 'data yang kamu cari tidak ada'], 404);
+            }
+
         return response()->json($authors);
     }
 
@@ -244,10 +321,41 @@ class OfficerController extends Controller
         $query = $request->input('query');
         $books = Book::with('categories', 'authors')->where(function ($queryBuilder) use ($query) {
             $queryBuilder->where('title_book', 'LIKE', "%{$query}%");
-        })
-            ->get();
+        })->get();
 
-        return response()->json($books);
+        if ($books->isEmpty()) {
+            return response()->json(['message' => 'data yang kamu cari tidak ada'], 404);
+        }
+
+
+        $categories = Category::all();
+        $authors = Author::all();
+
+        $books->transform(function ($book) {
+            if ($book->cover) {
+                $book->cover_url = Storage::url($book->cover);
+            } else {
+                $book->cover_url = null;
+            }
+            return $book;
+        });
+
+        return response()->json([
+            'books' => $books,
+            'categories' => $categories,
+            'authors' => $authors
+        ]);
+    }
+
+    public function exportPdf()
+    {
+        $reportBorrowings = Borrowing::with('users', 'books', 'fines')
+            ->whereNotIn('status', ['awaiting approval', 'borrowed'])->get();
+
+        $totalFine = Fine::sum('price');
+
+        $pdf = Pdf::loadView('roles.officer.export_pdf.report_borrowing', compact('reportBorrowings', 'totalFine'));
+        return $pdf->stream('borrowing_data.pdf');
     }
 }
 

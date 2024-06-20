@@ -9,6 +9,7 @@ use App\Models\Notification;
 use App\Models\UserReading;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class BorrowingController extends Controller
 {
@@ -28,7 +29,7 @@ class BorrowingController extends Controller
     {
         //
     }
-
+    
     /**
      * Store a newly created resource in storage.
      */

@@ -26,7 +26,9 @@
     @elseif (request()->is('officer/being-borrowings'))
         @include('roles.officer.__being_browing')
      @elseif (request()->is('officer/late-returned'))
-        @include('roles.officer._late_returned')
+        @include('roles.officer.__late_returned')
+    @elseif (request()->is('officer/data_fines'))
+        @include('roles.officer.__data_fines')
     @endif
 @endsection
 
