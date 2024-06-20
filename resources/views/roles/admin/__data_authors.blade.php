@@ -132,7 +132,7 @@
             },
             success: function(response) {
                 alert(response.message);
-                filterAuthors('deleted'); // Refresh the deleted categories list
+                filterAuthors('deleted'); // Refresh the deleted authors list
             },
             error: function(error) {
                 console.error(error);
@@ -143,11 +143,24 @@
     function updateAuthorTable(data) {
         var tableBody = $('#author-table-body');
         tableBody.empty();
-        data.forEach(function(author) {
-            var statusText = author.deleted_at ? 'Deleted' : 'Active';
-            var authorRow = `
+        if (data.length === 0) {
+            tableBody.append(`
+                <tr>
+                    <td colspan="3">
+                        <div class="card-body px-0 pt-0 pb-0"> 
+                            <p class="h4 text-secondary" style="text-align: center">
+                                No Author Data
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        } else {
+            data.forEach(function(author) {
+                var statusText = author.deleted_at ? 'Deleted' : 'Active';
+                var authorRow = `
               <tr>
-                  <td><p class="text-xs text-secondary mb-0 px-3">${author.id}</p></td>
+                  <td><p class="text-xs text-secondary mb-0 px-3">${id}</p></td>
                   <td><p class="text-xs text-secondary mb-0 px-3">${author.name}</p></td>
                   <td class="d-flex gap-3">
                       ${author.deleted_at ? `
@@ -200,8 +213,9 @@
                   </td>
               </tr>
           `;
-            tableBody.append(authorRow);
-        });
+                tableBody.append(authorRow);
+            });
+        }
     }
 
     $(document).ready(function() {

@@ -101,7 +101,8 @@ class UserController extends Controller
         ]);
 
         // Hash password
-        $dataUser['password'] = Hash::make($request->password);
+        $request['password'] = Hash::make($request->password);
+
 
         // Cek apakah pengguna sudah ada
         $userAlreadyExist = User::where('username', $request->username)
@@ -113,7 +114,7 @@ class UserController extends Controller
 
         try {
             // Buat pengguna baru
-            User::create($dataUser);
+            User::create($request->all());
 
             return back()->with('success', 'User created successfully.');
 

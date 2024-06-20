@@ -101,8 +101,21 @@
     function updateBookTable(data) {
         var tableBody = $('#book-table-body');
         tableBody.empty();
-        data.forEach(function(book) {
-            var bookRow = `
+        if (data.length === 0) {
+            tableBody.append(`
+            <tr>
+                <td colspan="5">
+                    <div class="card-body px-0 pt-0 pb-0">
+                        <p class="h4 text-secondary" style="text-align: center">
+                            No Book Data
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        `);
+        } else {
+            data.forEach(function(book) {
+                var bookRow = `
                 <tr>
                     <td><p class="text-xs text-secondary mb-0 px-3">${book.book_code}</p></td>
                     <td><p class="text-xs text-secondary mb-0 px-3" style="text-transform: capitalize;">${book.title_book}</p></td>
@@ -171,9 +184,10 @@
                     </td>
                 </tr>
             `;
-            tableBody.append(bookRow);
-            initializeMultiSelectTags(book.id);
-        });
+                tableBody.append(bookRow);
+                initializeMultiSelectTags(book.id);
+            });
+        }
     }
 
     $(document).ready(function() {

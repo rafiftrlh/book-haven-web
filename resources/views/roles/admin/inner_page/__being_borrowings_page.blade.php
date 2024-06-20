@@ -7,6 +7,10 @@
         </svg>
         <span style="font-weight: 700; font-size: 12px;">Back</span>
     </a>
+    <div class="mt-4">
+        <input type="text" id="search" class="form-control"
+            placeholder="Search approval request data by username...">
+    </div>
     <div class="card mb-4 mt-4">
         <div class="card-header pb-0 d-flex gap-1">
             <h6>Being Borrowed</h6>
@@ -52,7 +56,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="req-approve-table-body">
+                        <tbody id="being-borrowing-table-body">
                             @foreach ($beingBorrowings as $beingBorrowing)
                                 <tr>
                                     <td>
@@ -211,4 +215,71 @@
             }
         });
     }
+
+    function updateReqTable(data) {
+        var tableBody = $('#being-borrowing-table-body');
+        tableBody.empty();
+        if (data.length === 0) {
+            tableBody.append(`
+                <tr>
+                    <td colspan="5">
+                        <div class="card-body px-0 pt-0 pb-0">
+                            <p class="h4 text-secondary" style="text-align: center">
+                                No Books Borrowed Data
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        } else {
+            data.forEach(function(beingBorrowing) {
+                var beingBorrowingRow = `
+                <tr>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3" style="text-transform: uppercase;">
+                            ${beingBorrowing.id}</p>
+                    </td>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3" style="text-transform: uppercase;">
+                            ${beingBorrowing.books.book_code}</p>
+                    </td>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3">
+                            &commat;${beingBorrowing.users.username}</p>
+                    </td>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3">${beingBorrowing.due_date}</p>
+                    </td>
+                    <td class="d-flex gap-3 px-3">
+                        <button type="button" class="btn bg-gradient-info"
+                            onclick="confirmReturn(${beingBorrowing.id})">Return</button>
+                        <button type="button" class="btn bg-gradient-warning"
+                            onclick="confirmBroken(${beingBorrowing.id})">Broken</button>
+                        <button type="button" class="btn bg-gradient-danger"
+                            onclick="confirmLost(${beingBorrowing.id})">Lost</button>
+                    </td>
+                </tr>
+                `;
+                tableBody.append(beingBorrowingRow);
+            });
+        }
+    }
+
+    document.getElementById('search').addEventListener('keyup', function() {
+        let query = this.value;
+
+        $.ajax({
+            url: '{{ route('admin.searchBeingBorrowing') }}',
+            type: 'GET',
+            data: {
+                query: query
+            },
+            success: function(data) {
+                updateReqTable(data);
+            },
+            error: function(error) {
+                console.error(error); // Add this line to debug
+            }
+        });
+    })
 </script>

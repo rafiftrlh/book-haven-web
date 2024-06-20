@@ -260,8 +260,7 @@ class AdminController extends Controller
         $lateReturneds = Borrowing::with('users', 'books')
             ->where('status', 'borrowed')
             ->where('due_date', '<', $today)
-            ->limit(5)
-            ->orderBy('borrow_date', 'asc')
+            ->orderBy('borrow_date', 'desc')
             ->get();
 
         // Loop through each borrowing to calculate the fine
@@ -347,6 +346,64 @@ class AdminController extends Controller
             'categories' => $categories,
             'authors' => $authors
         ]);
+    }
+
+    public function searchReqApproval(Request $request)
+    {
+        $query = $request->input('query');
+
+        $reqApprovals = Borrowing::with('users', 'books')
+            ->where('status', 'awaiting approval')
+            ->whereHas('users', function ($queryBuilder) use ($query) {
+                $queryBuilder->where('username', 'LIKE', "%{$query}%");
+            })
+            ->orderBy('borrow_date', 'desc')
+            ->get();
+
+        return response()->json($reqApprovals);
+    }
+
+    public function searchBeingBorrowing(Request $request)
+    {
+        $query = $request->input('query');
+
+        $today = now()->toDateString();
+
+        $beingBorrowing = Borrowing::with('users', 'books')
+            ->where('status', 'borrowed')
+            ->where('due_date', '>=', $today)
+            ->whereHas('users', function ($queryBuilder) use ($query) {
+                $queryBuilder->where('username', 'LIKE', "%{$query}%");
+            })
+            ->orderBy('borrow_date', 'asc')
+            ->get();
+
+        return response()->json($beingBorrowing);
+    }
+
+    public function searchLateReturn(Request $request)
+    {
+        $query = $request->input('query');
+
+        $today = now()->toDateString();
+
+        $searchLateReturn = Borrowing::with('users', 'books')
+            ->where('status', 'borrowed')
+            ->where('due_date', '<', $today)
+            ->whereHas('users', function ($queryBuilder) use ($query) {
+                $queryBuilder->where('username', 'LIKE', "%{$query}%");
+            })
+            ->orderBy('borrow_date', 'asc')
+            ->get();
+
+        // Loop through each borrowing to calculate the fine
+        foreach ($searchLateReturn as $lateReturn) {
+            $daysLate = Carbon::parse($lateReturn->due_date)->diffInDays(Carbon::now(), false);
+            $lateFine = max($daysLate * 10000, 0); // Calculate late fine
+            $lateReturn->fine_price = $lateFine; // Add fine price to the borrowing data
+        }
+
+        return response()->json($searchLateReturn);
     }
 
     public function exportPdf()

@@ -86,18 +86,24 @@
                                                     </p>
                                                 </td>
                                                 <td class="d-flex gap-3 px-3">
-                                                    <button type="button" class="btn bg-gradient-info"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editUser_{{ $user->id }}"
-                                                        data-book-id="{{ $user->id }}">Edit</button>
-                                                    @include('partials.modals.admin.user.__edit_user')
-                                                    <form action="{{ route('users.destroy', $user->id) }}"
-                                                        method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </form>
+                                                    @if ($user->id == Auth::user()->id)
+                                                        <p class="text-secondary mb-0 px-3">This is your account
+                                                        </p>
+                                                    @else
+                                                        <button type="button" class="btn bg-gradient-info"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editUser_{{ $user->id }}"
+                                                            data-book-id="{{ $user->id }}">Edit</button>
+                                                        @include('partials.modals.admin.user.__edit_user')
+                                                        <form action="{{ route('users.destroy', $user->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -144,89 +150,120 @@
         }
 
         function updateTable(data) {
+            var authUserId = {{ Auth::user()->id }};
             var tableBody = $('#user-table-body');
             tableBody.empty();
-            data.forEach(function(user) {
-                var roleText = (user.role == 1) ? 'Admin' : (user.role == 2) ? 'Officer' : 'Customer';
-                var userRow = `
-                <tr>
-                    <td><p class="text-xs text-secondary mb-0 px-3">${user.username}</p></td>
-                    <td><p class="text-xs text-secondary mb-0 px-3">${user.full_name}</p></td>
-                    <td><p class="text-xs text-secondary mb-0 px-3">${user.email}</p></td>
-                    <td><p class="text-xs text-secondary mb-0 px-3">${roleText}</p></td>
-                    <td class="d-flex gap-3 px-3">
-                        <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editUser_${user.id}" data-book-id="${user.id}">Edit</button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="editUser_${user.id}" tabindex="-1" role="dialog" aria-labelledby="editUserLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered position-relative" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="edituserLabel">Edit user</h5>
-                                        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2"
-                                            data-bs-dismiss="modal">
-                                            <i class="fa fa-close" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="/api/users/${user.id}" method="POST">
-                                            @method('PATCH')
-                                            @csrf
-                                            {{-- <input type="hidden" id="editUserId" value="${user.id}"> --}}
-                                            <div class="modal-body container-fluid">
-                                                <div class="mb-3">
-                                                    <label for="username" class="form-label">Username</label>
-                                                    <input autocomplete="off" type="text" autofocus
-                                                        class="form-control @error('username') is-invalid @enderror" id="username"
-                                                        name="username" value="${user.username}">
-                                                    @error('username')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
+            if (data.length === 0) {
+                tableBody.append(`
+    <tr>
+        <td colspan="5">
+            <div class="card-body px-0 pt-0 pb-0">
+                <p class="h4 text-secondary" style="text-align: center">
+                    No User Data
+                </p>
+            </div>
+        </td>
+    </tr>
+    `);
+            } else {
+                data.forEach(function(user) {
+                    var roleText = (user.role == 1) ? 'Admin' : (user.role == 2) ? 'Officer' : 'Customer';
+                    var userRow = `
+    <tr>
+        <td>
+            <p class="text-xs text-secondary mb-0 px-3">${user.username}</p>
+        </td>
+        <td>
+            <p class="text-xs text-secondary mb-0 px-3">${user.full_name}</p>
+        </td>
+        <td>
+            <p class="text-xs text-secondary mb-0 px-3">${user.email}</p>
+        </td>
+        <td>
+            <p class="text-xs text-secondary mb-0 px-3">${roleText}</p>
+        </td>
+        <td class="d-flex gap-3 px-3">
+            ${user.id == authUserId
+            ?
+            `<p class="text-secondary mb-0 px-3">This is your account</p>`
+            :
+            `<button type="button" class="btn bg-gradient-info" data-bs-toggle="modal"
+                        data-bs-target="#editUser_${user.id}" data-book-id="${user.id}">Edit</button>
 
-                                                    <label for="full_name" class="form-label">Full Name</label>
-                                                    <input autocomplete="off" type="text"
-                                                        class="form-control @error('full_name') is-invalid @enderror" id="full_name"
-                                                        name="full_name" value="${user.full_name}">
-                                                    @error('full_name')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
+                    <div class="modal fade" id="editUser_${user.id}" tabindex="-1" role="dialog"
+                        aria-labelledby="editUserLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered position-relative" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="edituserLabel">Edit user</h5>
+                                    <button
+                                        class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2"
+                                        data-bs-dismiss="modal">
+                                        <i class="fa fa-close" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/api/users/${user.id}" method="POST">
+                                        @method('PATCH')
+                                        @csrf
+                                        {{-- <input type="hidden" id="editUserId" value="${user.id}"> --}}
+                                        <div class="modal-body container-fluid">
+                                            <div class="mb-3">
+                                                <label for="username" class="form-label">Username</label>
+                                                <input autocomplete="off" type="text" autofocus
+                                                    class="form-control @error('username') is-invalid @enderror"
+                                                    id="username" name="username" value="${user.username}">
+                                                @error('username')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
 
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input autocomplete="off" type="email"
-                                                        class="form-control @error('email') is-invalid @enderror" id="email" name="email"
-                                                        value="${user.email}">
-                                                    @error('email')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
+                                                <label for="full_name" class="form-label">Full Name</label>
+                                                <input autocomplete="off" type="text"
+                                                    class="form-control @error('full_name') is-invalid @enderror"
+                                                    id="full_name" name="full_name" value="${user.full_name}">
+                                                @error('full_name')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
 
-                                                    <label for="role" class="form-label">Role</label>
-                                                    <input autocomplete="off" type="number"
-                                                        class="form-control @error('role') is-invalid @enderror" id="role" name="role"
-                                                        value="${user.role}">
-                                                    @error('role')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                                <label for="email" class="form-label">Email</label>
+                                                <input autocomplete="off" type="email"
+                                                    class="form-control @error('email') is-invalid @enderror" id="email"
+                                                    name="email" value="${user.email}">
+                                                @error('email')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+
+                                                <label for="role" class="form-label">Role</label>
+                                                <input autocomplete="off" type="number"
+                                                    class="form-control @error('role') is-invalid @enderror" id="role"
+                                                    name="role" value="${user.role}">
+                                                @error('role')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn bg-gradient-primary">Save changes</button>
-                                            </div>
-                                        </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn bg-gradient-primary">Save changes</button>
+                                        </div>
+                                    </form>
 
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <form action="/api/users/${user.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            `;
-                tableBody.append(userRow);
-            });
+                    </div>
+
+                    <form action="/api/users/${user.id}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>`}
+        </td>
+    </tr>
+    `;
+                    tableBody.append(userRow);
+                });
+            }
         }
 
         $(document).ready(function() {
