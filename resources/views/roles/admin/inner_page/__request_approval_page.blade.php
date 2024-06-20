@@ -7,6 +7,10 @@
         </svg>
         <span style="font-weight: 700; font-size: 12px;">Back</span>
     </a>
+    <div class="mt-4">
+        <input type="text" id="search" class="form-control"
+            placeholder="Search approval request data by username...">
+    </div>
     <div class="card mb-4 mt-4">
         <div class="card-header pb-0 d-flex gap-1">
             <h6>Request Approval</h6>
@@ -177,4 +181,107 @@
             }
         });
     }
+
+    function updateReqTable(data) {
+        var tableBody = $('#req-approve-table-body');
+        tableBody.empty();
+        if (data.length === 0) {
+            tableBody.append(`
+                <tr>
+                    <td colspan="5">
+                        <div class="card-body px-0 pt-0 pb-0">
+                            <p class="h4 text-secondary" style="text-align: center">
+                                No Request Approval Data
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        } else {
+            data.forEach(function(reqApproval) {
+                var reqApprovalRow = `
+                <tr>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3" style="text-transform: uppercase;">
+                            ${reqApproval.id}</p>
+                    </td>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3" style="text-transform: uppercase;">
+                            ${reqApproval.books.book_code}</p>
+                    </td>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3">
+                            &commat;${reqApproval.users.username}</p>
+                    </td>
+                    <td>
+                        <p class="text-xs text-secondary mb-0 px-3">${reqApproval.borrow_date}</p>
+                    </td>
+                    <td class="d-flex gap-3 px-3">
+                        <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal"
+                            data-bs-target="#approveBorrowing_${reqApproval.id}"
+                            data-book-id="${reqApproval.id}">Approve</button>
+
+                            <div class="modal fade" id="approveBorrowing_${reqApproval.id}" tabindex="-1" role="dialog"
+                                aria-labelledby="approveBorrowingLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered position-relative" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="approveBorrowingLabel">Approve Borrowing</h5>
+                                            <button class="btn btn-link text-dark p-0" style="position: absolute; top:20px; right: 20px;"
+                                                data-bs-dismiss="modal">
+                                                <i class="fa fa-close" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="" method="POST">
+                                                @method('PATCH')
+                                                @csrf
+                                                <div class="modal-body container-fluid">
+                                                    <div class="mb-3">
+                                                        <label for="due_date" class="form-label">Due Date</label>
+                                                        <input required autocomplete="off" type="date"
+                                                            class="form-control @error('due_date') is-invalid @enderror"
+                                                            id="due_date_${reqApproval.id}" due_date="name" value="${reqApproval.due_date}">
+                                                        @error('due_date')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn bg-gradient-primary"
+                                                        onclick="confirmApprove(${reqApproval.id})">Approve</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <button type="button" class="btn btn-danger"
+                            onclick="confirmDisapprove(${reqApproval.id})">Disapprove</button>
+                    </td>
+                </tr>
+                `;
+                tableBody.append(reqApprovalRow);
+            });
+        }
+    }
+
+    document.getElementById('search').addEventListener('keyup', function() {
+        let query = this.value;
+
+        $.ajax({
+            url: '{{ route('admin.searchReqApproval') }}',
+            type: 'GET',
+            data: {
+                query: query
+            },
+            success: function(data) {
+                updateReqTable(data);
+            },
+            error: function(error) {
+                console.error(error); // Add this line to debug
+            }
+        });
+    })
 </script>

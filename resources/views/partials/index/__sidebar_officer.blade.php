@@ -14,7 +14,7 @@
         </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main" style="height: 80%;">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('officer') ? 'active' : '' }}" href="{{ route('officer.home') }}">
@@ -79,8 +79,7 @@
                         </svg>
                     </div>
                     <span class="nav-link-text ms-1">Data Author</span>
-                </a
-            </li>
+                </a </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('officer/confirm_peminjaman') ? 'active' : '' }}"
                     href="{{ route('officer.confirm_peminjaman') }}">
@@ -96,8 +95,7 @@
                         </svg>
                     </div>
                     <span class="nav-link-text ms-1">Data Peminjaman</span>
-                </a
-            </li>
+                </a </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('officer/data_fines') ? 'active' : '' }}"
                     href="{{ route('officer.data_fines') }}">
@@ -114,7 +112,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Data Fines</span>
                 </a>
-            </li> 
+            </li>
         </ul>
     </div>
 </aside>

@@ -37,6 +37,10 @@ Route::get('/admin/search-categories', [AdminController::class, 'searchCategorie
 Route::get('/admin/search-authors', [AdminController::class, 'searchAuthors'])->name('admin.searchAuthors');
 Route::get('/admin/search-books', [AdminController::class, 'searchBooks'])->name('admin.searchBooks');
 
+Route::get('/admin/search-req-approval', [AdminController::class, 'searchReqApproval'])->name('admin.searchReqApproval');
+Route::get('/admin/search-being-borrowing', [AdminController::class, 'searchBeingBorrowing'])->name('admin.searchBeingBorrowing');
+Route::get('/admin/search-late-return', [AdminController::class, 'searchLateReturn'])->name('admin.searchLateReturn');
+
 Route::get('/user/search-books', [UserController::class, 'searchBooks'])->name('customer.searchBooks');
 
 Route::resource('categories', CategoryController::class);

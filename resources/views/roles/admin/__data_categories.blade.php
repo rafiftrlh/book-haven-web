@@ -143,65 +143,79 @@
     function updateCategoryTable(data) {
         var tableBody = $('#category-table-body');
         tableBody.empty();
-        data.forEach(function(category) {
-            var statusText = category.deleted_at ? 'Deleted' : 'Active';
-            var categoryRow = `
-              <tr>
-                  <td><p class="text-xs text-secondary mb-0 px-3">${category.id}</p></td>
-                  <td><p class="text-xs text-secondary mb-0 px-3">${category.name}</p></td>
-                  <td class="d-flex gap-3">
-                      ${category.deleted_at ? `
-                      <button type="button" class="btn btn-success" onclick="restoreCategory(${category.id})">Restore</button>
-                      ` : `
-                      <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editCategory_${category.id}" data-book-id="${category.id}">Edit</button>
-                      <!-- Modal -->
-                      <div class="modal fade" id="editCategory_${category.id}" tabindex="-1" role="dialog"
-                          aria-labelledby="editCategoryLabel" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered position-relative" role="document">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h5 class="modal-title" id="editCategoryLabel">Edit Category</h5>
-                                      <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2"
-                                          data-bs-dismiss="modal">
-                                          <i class="fa fa-close" aria-hidden="true"></i>
-                                      </button>
-                                  </div>
-                                  <div class="modal-body">
-                                      <form action="/api/categories/${category.id}" method="POST">
-                                          @method('PATCH')
-                                          @csrf
-                                          {{-- <input type="hidden" id="editUserId" value="${category.id}"> --}}
-                                          <div class="modal-body container-fluid">
-                                              <div class="mb-3">
-                                                  <label for="name" class="form-label">Category</label>
-                                                  <input required autocomplete="off" type="text"
-                                                      class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                                                      value="${category.name}">
-                                                  @error('name')
-                                                      <div class="invalid-feedback">{{ $message }}</div>
-                                                  @enderror
-                                              </div>
-                                          </div>
-                                          <div class="modal-footer">
-                                              <button type="submit" class="btn bg-gradient-primary">Save changes</button>
-                                          </div>
-                                      </form>
+        if (data.length === 0) {
+            tableBody.append(`
+            <tr>
+                <td colspan="3">
+                    <div class="card-body px-0 pt-0 pb-0">
+                        <p class="h4 text-secondary" style="text-align: center">
+                            No Category Data
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        `);
+        } else {
+            data.forEach(function(category) {
+                var statusText = category.deleted_at ? 'Deleted' : 'Active';
+                var categoryRow = `
+                        <tr>
+                            <td><p class="text-xs text-secondary mb-0 px-3">${category.id}</p></td>
+                            <td><p class="text-xs text-secondary mb-0 px-3">${category.name}</p></td>
+                            <td class="d-flex gap-3">
+                                ${category.deleted_at ? `
+                                <button type="button" class="btn btn-success" onclick="restoreCategory(${category.id})">Restore</button>
+                                ` : `
+                                <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal" data-bs-target="#editCategory_${category.id}" data-book-id="${category.id}">Edit</button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="editCategory_${category.id}" tabindex="-1" role="dialog"
+                                    aria-labelledby="editCategoryLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered position-relative" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editCategoryLabel">Edit Category</h5>
+                                                <button class="btn btn-link text-dark p-0 fixed-plugin-close-button position-absolute end-3 top-2"
+                                                    data-bs-dismiss="modal">
+                                                    <i class="fa fa-close" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/api/categories/${category.id}" method="POST">
+                                                    @method('PATCH')
+                                                    @csrf
+                                                    {{-- <input type="hidden" id="editUserId" value="${category.id}"> --}}
+                                                    <div class="modal-body container-fluid">
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">Category</label>
+                                                            <input required autocomplete="off" type="text"
+                                                                class="form-control @error('name') is-invalid @enderror" id="name" name="name"
+                                                                value="${category.name}">
+                                                            @error('name')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn bg-gradient-primary">Save changes</button>
+                                                    </div>
+                                                </form>
 
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <form action="/api/categories/${category.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
-                          @csrf
-                          @method('DELETE')
-                          <button type="submit" class="btn btn-danger">Delete</button>
-                      </form>
-                      `}
-                  </td>
-              </tr>
-          `;
-            tableBody.append(categoryRow);
-        });
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form action="/api/categories/${category.id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                `}
+                            </td>
+                        </tr>
+                    `;
+                tableBody.append(categoryRow);
+            });
+        }
     }
 
     $(document).ready(function() {

@@ -250,7 +250,7 @@ class BorrowingController extends Controller
 
         $notification = new Notification();
         $notification->user_id = $borrowing->user_id;
-        $notification->message = 'You returned a book with the title ' . $book->title_book . ' late, you must pay a fine of' . $borrowing->books->price;
+        $notification->message = 'You returned a book with the title ' . $book->title_book . ' late, you must pay a fine of ' . $price;
         $notification->status = 'Unread';
         $notification->notification_type = 'Returned late';
         $notification->save();

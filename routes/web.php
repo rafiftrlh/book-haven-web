@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/admin/fines-broken', [AdminController::class, 'allBrokenFines'])->name('admin.allBrokenFines');
         Route::get('/admin/fines-lost', [AdminController::class, 'allLostFines'])->name('admin.allLostFines');
         Route::get('/admin/fines-late-and-broken', [AdminController::class, 'allLateAndBrokenFines'])->name('admin.allLateAndBrokenFines');
+
+        Route::get('admin/monthly-borrowing-data', [AdminController::class, 'monthlyBorrowingData']);
     });
 
     Route::group(['middleware' => ['cek_login:2']], function () {
@@ -104,7 +106,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('officer/pdf_borrowing', [OfficerController::class, 'exportPdf'])->name('officer.exportPdf');
 
         // web.php
-Route::get('officer/monthly-borrowing-data', [OfficerController::class, 'monthlyBorrowingData']);
+        Route::get('officer/monthly-borrowing-data', [OfficerController::class, 'monthlyBorrowingData']);
 
     });
 
