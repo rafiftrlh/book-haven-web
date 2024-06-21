@@ -67,4 +67,25 @@ class ProfileController extends Controller
         return view('roles.customer.index', compact('books'));
     }
 
+    public function edit()
+    {
+        $user = Auth::user();
+        return view('roles.customer.edit', compact('user'));
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
+        ]);
+
+        $user = Auth::user();
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->save();
+
+        return redirect()->route('customer.profile')->with('success', 'Profile updated successfully.');
+    }
+
 }

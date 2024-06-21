@@ -125,6 +125,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
         Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
         Route::get('/get-notifications', [NotificationController::class, 'UnreadNotif'])->name('get.notifications');
+        // routes/web.php
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
     });
 });
 
