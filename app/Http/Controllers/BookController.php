@@ -21,7 +21,7 @@ class BookController extends Controller
 
         $books->transform(function ($book) {
             if ($book->cover) {
-                $book->cover_url = Storage::url($book->cover);
+                $book->cover_url = url('storage/' . $book->cover);
             } else {
                 $book->cover_url = null;
             }

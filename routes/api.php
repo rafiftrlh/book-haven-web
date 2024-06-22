@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookmarkController;
@@ -26,6 +27,9 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+
+
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::put('/resetpw', [UserController::class, 'reset_pw'])->name('users.resetpw');
 
