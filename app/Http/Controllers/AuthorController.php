@@ -12,7 +12,9 @@ class AuthorController extends Controller
     {
         $authors = Author::all();
 
-        return $authors;
+        return response()->json([
+            'authors' => $authors
+        ]);
     }
 
     /**

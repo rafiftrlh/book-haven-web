@@ -120,6 +120,38 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
+    public function login(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        // Ambil data request username & password
+        $credentials = $request->only('username', 'password');
+
+        // Cek apakah username dan password valid
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // Cek apakah role user adalah 3
+            if ($user->role == 3) {
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return response()->json([
+                    'user' => $user,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer'
+                ]);
+            } else {
+                // Return error jika role tidak sesuai
+                return response()->json(['error' => 'Unauthorized role'], 403);
+            }
+        }
+
+        // Return error jika login gagal
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
     public function logout(Request $request)
     {
         // logout itu harus menghapus session nya 
