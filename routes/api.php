@@ -72,6 +72,8 @@ Route::post('rating', [RatingBookController::class, 'store'])->name('review.stor
 Route::post('/bookmark', [BookmarkController::class, 'storeOrDelete'])->name('bookmarks.storeOrDelete');
 Route::delete('/bookmark', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
 
+Route::get('notification/{id}', [NotificationController::class, 'notificationUser']);
+
 // Contoh rute untuk mengambil notifikasi pengguna
 
 

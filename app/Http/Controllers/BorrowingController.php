@@ -22,6 +22,11 @@ class BorrowingController extends Controller
         return $borrowings;
     }
 
+    public function awaitingApproveBorrowing()
+    {
+        
+    }
+
     /**
      * Show the form for creating a new resource.
      */
