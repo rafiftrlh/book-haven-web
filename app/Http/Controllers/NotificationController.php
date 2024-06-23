@@ -19,6 +19,15 @@ class NotificationController extends Controller
         return view('roles.customer.index', ['notifications' => $notifications]);
     }
 
+    public function notificationUser($id)
+    {
+        $notifications = Notification::where('user_id', $id);
+
+        return response()->json([
+            'notification' => $notifications
+        ]);
+    }
+
     // Contoh controller untuk mengambil notifikasi pengguna
     public function UnreadNotif()
     {
@@ -26,49 +35,6 @@ class NotificationController extends Controller
         $notificationsUnread = Notification::where('user_id', $user)->where('status', 'Unread')->get();
 
         return response()->json($notificationsUnread);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Notification $notification)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Notification $notification)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Notification $notification)
-    {
-        //
     }
 
     /**
@@ -98,6 +64,4 @@ class NotificationController extends Controller
 
         return redirect()->back()->with('error', 'Failed to mark notification as read.');
     }
-
-
 }

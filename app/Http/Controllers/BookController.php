@@ -17,7 +17,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::with('categories', 'authors')->get();
+        $books = Book::with('categories', 'authors', 'reviews')->get();
 
         $books->transform(function ($book) {
             if ($book->cover) {
@@ -25,6 +25,10 @@ class BookController extends Controller
             } else {
                 $book->cover_url = null;
             }
+
+            $totalRating = $book->reviews->avg('rating');
+            $book->total_rating = round($totalRating, 1);
+
             return $book;
         });
 
@@ -33,7 +37,7 @@ class BookController extends Controller
 
     public function show($id)
     {
-        $book = Book::with('categories', 'authors')->find($id);
+        $book = Book::with('categories', 'authors', 'reviews')->find($id);
 
         if (!$book) {
             return response()->json(['message' => 'Book not found'], 404);
@@ -44,6 +48,9 @@ class BookController extends Controller
         } else {
             $book->cover_url = null;
         }
+
+        $totalRating = $book->reviews->avg('rating');
+        $book->total_rating = round($totalRating, 1);
 
         return response()->json(['book' => $book]);
     }
